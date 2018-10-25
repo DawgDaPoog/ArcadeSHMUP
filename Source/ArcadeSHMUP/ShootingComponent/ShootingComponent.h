@@ -55,7 +55,7 @@ public:
 		TSubclassOf<class AWeapon> Arc;
 
 	void OnWeaponPickup(int32 WeaponNumber);
-	int32 CheckAmountOfSpawnedByType(FName &Type);
+	int32 CheckAmountOfSpawnedByType(FName Type);
 	// 0 - shotgun, 1 - Machinegun, 2 - Rifle, 3 - Lazer, 4 - Rocket, 5 - Arc
 	
 private:

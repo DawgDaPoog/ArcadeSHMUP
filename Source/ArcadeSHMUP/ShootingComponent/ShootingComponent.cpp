@@ -5,7 +5,7 @@
 #include "Engine/World.h"
 #include "../ArcadeSHMUPPawn.h"
 #include "Components/ArrowComponent.h"
-
+#include "Weapon.h"
 // Sets default values for this component's properties
 UShootingComponent::UShootingComponent()
 {
@@ -58,7 +58,7 @@ void UShootingComponent::OnWeaponPickup(int32 WeaponNumber)
 			{
 				if (WeaponArrow.Type == FName("Shotgun"))
 				{
-					Weapon->Upgrade();
+					WeaponArrow.Weapon->Upgrade();
 				}
 
 			}
@@ -67,7 +67,7 @@ void UShootingComponent::OnWeaponPickup(int32 WeaponNumber)
 	}
 }
 
-int32 UShootingComponent::CheckAmountOfSpawnedByType(FName &Type)
+int32 UShootingComponent::CheckAmountOfSpawnedByType(FName Type)
 {
 	int32 HowManyHasAlreadyBeenSpawned = 0;
 	for (auto WeaponsArrow : WeaponsArrows)
