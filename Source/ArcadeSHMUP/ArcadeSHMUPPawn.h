@@ -23,20 +23,47 @@ class AArcadeSHMUPPawn : public APawn
 	UPROPERTY(Category = Camera, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
 
+	UPROPERTY(Category = "Shooting", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		class UShootingComponent* ShootingComponent;
+	
+	UPROPERTY(Category = "Arrows", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		class UArrowComponent* ArrowForShotgun1;
+
+	UPROPERTY(Category = "Arrows", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		class UArrowComponent* ArrowForShotgun2;
+
+	UPROPERTY(Category = "Arrows", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		class UArrowComponent* ArrowForMachinegun1;
+
+	UPROPERTY(Category = "Arrows", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		class UArrowComponent* ArrowForMachinegun2;
+
+	UPROPERTY(Category = "Arrows", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		class UArrowComponent* ArrowForRifle1;
+
+	UPROPERTY(Category = "Arrows", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		class UArrowComponent* ArrowForRifle2;
+
+	UPROPERTY(Category = "Arrows", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		class UArrowComponent* ArrowForLazer1;
+
+	UPROPERTY(Category = "Arrows", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		class UArrowComponent* ArrowForLazer2;
+
+	UPROPERTY(Category = "Arrows", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		class UArrowComponent* ArrowForRocket1;
+
+	UPROPERTY(Category = "Arrows", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		class UArrowComponent* ArrowForRocket2;
+
+	UPROPERTY(Category = "Arrows", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		class UArrowComponent* ArrowForArc1;
+
+	UPROPERTY(Category = "Arrows", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		class UArrowComponent* ArrowForArc2;
+
 public:
 	AArcadeSHMUPPawn();
-
-	/** Offset from the ships location to spawn projectiles */
-	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite )
-	FVector GunOffset;
-	
-	/* How fast the weapon will fire */
-	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
-	float FireRate;
-
-	/* The speed our ship moves around the level */
-	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
-	float MoveSpeed;
 
 	/** Sound to play each time we fire */
 	UPROPERTY(Category = Audio, EditAnywhere, BlueprintReadWrite)
@@ -48,24 +75,25 @@ public:
 	// End Actor Interface
 
 	/* Fire a shot in the specified direction */
-	void FireShot(FVector FireDirection);
+	void AttemptFireShot(FVector FireDirection);
 
-	/* Handler for the fire timer expiry */
-	void ShotTimerExpired();
 
 	// Static names for axis bindings
 	static const FName MoveForwardBinding;
 	static const FName MoveRightBinding;
-	static const FName FireForwardBinding;
-	static const FName FireRightBinding;
+	static const FName TurnClockwiseBinding;
+	static const FName FireBinding;
+
+	UArrowComponent* GetArrowForWeapon(int32 WeaponIndex, bool bIsFirst);
 
 private:
+	UPROPERTY(EditDefaultsOnly, Category = "Movement")
+		float ShipThrottle = 30000.f;
 
-	/* Flag to control firing  */
-	uint32 bCanFire : 1;
+	UPROPERTY(EditDefaultsOnly, Category = "Movement")
+		float TurnRate = 30.f;
 
-	/** Handle for efficient management of ShotTimerExpired timer */
-	FTimerHandle TimerHandle_ShotTimerExpired;
+	void AttemptSuper();
 
 public:
 	/** Returns ShipMeshComponent subobject **/

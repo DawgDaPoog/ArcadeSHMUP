@@ -12,11 +12,13 @@
 #include "Engine/StaticMesh.h"
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundBase.h"
+#include "ShootingComponent/ShootingComponent.h"
+#include "Components/ArrowComponent.h"
 
-const FName AArcadeSHMUPPawn::MoveForwardBinding("MoveForward");
-const FName AArcadeSHMUPPawn::MoveRightBinding("MoveRight");
-const FName AArcadeSHMUPPawn::FireForwardBinding("FireForward");
-const FName AArcadeSHMUPPawn::FireRightBinding("FireRight");
+const FName AArcadeSHMUPPawn::MoveForwardBinding("UpMovement");
+const FName AArcadeSHMUPPawn::MoveRightBinding("RightMovement");
+const FName AArcadeSHMUPPawn::TurnClockwiseBinding("TurnClockwise");
+const FName AArcadeSHMUPPawn::FireBinding("Shoot");
 
 AArcadeSHMUPPawn::AArcadeSHMUPPawn()
 {	
@@ -44,12 +46,43 @@ AArcadeSHMUPPawn::AArcadeSHMUPPawn()
 	CameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	CameraComponent->bUsePawnControlRotation = false;	// Camera does not rotate relative to arm
 
-	// Movement
-	MoveSpeed = 1000.0f;
-	// Weapon
-	GunOffset = FVector(90.f, 0.f, 0.f);
-	FireRate = 0.1f;
-	bCanFire = true;
+	ShootingComponent = CreateDefaultSubobject<UShootingComponent>(FName("ShootingComponent"));
+
+	ArrowForShotgun1 = CreateDefaultSubobject<UArrowComponent>(FName("ArrowForShotgun1"));
+	ArrowForShotgun1->SetupAttachment(RootComponent);
+
+	ArrowForShotgun2 = CreateDefaultSubobject<UArrowComponent>(FName("ArrowForShotgun2"));
+	ArrowForShotgun2->SetupAttachment(RootComponent);
+
+	ArrowForMachinegun1 = CreateDefaultSubobject<UArrowComponent>(FName("ArrowForMachinegun1"));
+	ArrowForMachinegun1->SetupAttachment(RootComponent);
+
+	ArrowForMachinegun2 = CreateDefaultSubobject<UArrowComponent>(FName("ArrowForMachinegun2"));
+	ArrowForMachinegun2->SetupAttachment(RootComponent);
+
+	ArrowForRifle1 = CreateDefaultSubobject<UArrowComponent>(FName("ArrowForRifle1"));
+	ArrowForRifle1->SetupAttachment(RootComponent);
+
+	ArrowForRifle2 = CreateDefaultSubobject<UArrowComponent>(FName("ArrowForRifle2"));
+	ArrowForRifle2->SetupAttachment(RootComponent);
+
+	ArrowForLazer1 = CreateDefaultSubobject<UArrowComponent>(FName("ArrowForLazer1"));
+	ArrowForLazer1->SetupAttachment(RootComponent);
+	
+	ArrowForLazer2 = CreateDefaultSubobject<UArrowComponent>(FName("ArrowForLazer2"));
+	ArrowForLazer2->SetupAttachment(RootComponent);
+	
+	ArrowForRocket1 = CreateDefaultSubobject<UArrowComponent>(FName("ArrowForRocket1"));
+	ArrowForRocket1->SetupAttachment(RootComponent);
+	
+	ArrowForRocket2 = CreateDefaultSubobject<UArrowComponent>(FName("ArrowForRocket2"));
+	ArrowForRocket2->SetupAttachment(RootComponent);
+	
+	ArrowForArc1 = CreateDefaultSubobject<UArrowComponent>(FName("ArrowForArc1"));
+	ArrowForArc1->SetupAttachment(RootComponent);
+	
+	ArrowForArc2 = CreateDefaultSubobject<UArrowComponent>(FName("ArrowForArc2"));
+	ArrowForArc2->SetupAttachment(RootComponent);
 }
 
 void AArcadeSHMUPPawn::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -59,79 +92,103 @@ void AArcadeSHMUPPawn::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 	// set up gameplay key bindings
 	PlayerInputComponent->BindAxis(MoveForwardBinding);
 	PlayerInputComponent->BindAxis(MoveRightBinding);
-	PlayerInputComponent->BindAxis(FireForwardBinding);
-
+	PlayerInputComponent->BindAxis(TurnClockwiseBinding);
+	PlayerInputComponent->BindAxis(FireBinding);
+	PlayerInputComponent->BindAction(FName("Super"), IE_Pressed, this, &AArcadeSHMUPPawn::AttemptSuper);
 }
 
 void AArcadeSHMUPPawn::Tick(float DeltaSeconds)
 {
-	// Find movement direction
 	const float ForwardValue = GetInputAxisValue(MoveForwardBinding);
 	const float RightValue = GetInputAxisValue(MoveRightBinding);
 
-	// Clamp max size so that (X=1, Y=1) doesn't cause faster movement in diagonal directions
-	const FVector MoveDirection = FVector(ForwardValue, RightValue, 0.f).GetClampedToMaxSize(1.0f);
-
-	// Calculate  movement
-	const FVector Movement = MoveDirection * MoveSpeed * DeltaSeconds;
-
-	// If non-zero size, move this actor
-	if (Movement.SizeSquared() > 0.0f)
-	{
-		const FRotator NewRotation = Movement.Rotation();
-		FHitResult Hit(1.f);
-		RootComponent->MoveComponent(Movement, NewRotation, true, &Hit);
-		
-		if (Hit.IsValidBlockingHit())
-		{
-			const FVector Normal2D = Hit.Normal.GetSafeNormal2D();
-			const FVector Deflection = FVector::VectorPlaneProject(Movement, Normal2D) * (1.f - Hit.Time);
-			RootComponent->MoveComponent(Deflection, NewRotation, true);
-		}
-	}
-	
+	const float ClockWiseTurnValue = GetInputAxisValue(TurnClockwiseBinding);
 	// Create fire direction vector
 	const FVector FireDirection = FVector(GetActorForwardVector());
 
-	// Try and fire a shot
-	FireShot(FireDirection);
+	FVector MovementVector = FVector(ForwardValue*ShipThrottle*cos(0.785398*RightValue), RightValue*ShipThrottle*cos(0.785398*ForwardValue), 0.f);
+
+	ShipMeshComponent->AddForce(MovementVector);
+	
+	SetActorRotation(GetActorRotation() + FRotator(0.f, ClockWiseTurnValue*TurnRate, 0.f)*DeltaSeconds);
+
 }
 
-void AArcadeSHMUPPawn::FireShot(FVector FireDirection)
+void AArcadeSHMUPPawn::AttemptFireShot(FVector FireDirection)
 {
-	// If it's ok to fire again
-	if (bCanFire == true)
+	
+}
+
+UArrowComponent* AArcadeSHMUPPawn::GetArrowForWeapon(int32 WeaponIndex, bool bIsFirst)
+{
+	switch(WeaponIndex)
 	{
-		// If we are pressing fire stick in a direction
-		if (FireDirection.SizeSquared() > 0.0f)
+	case 0:
+		if (bIsFirst)
 		{
-			const FRotator FireRotation = FireDirection.Rotation();
-			// Spawn projectile at an offset from this pawn
-			const FVector SpawnLocation = GetActorLocation() + FireRotation.RotateVector(GunOffset);
-
-			UWorld* const World = GetWorld();
-			if (World != NULL)
-			{
-				// spawn the projectile
-				World->SpawnActor<AArcadeSHMUPProjectile>(SpawnLocation, FireRotation);
-			}
-
-			bCanFire = false;
-			World->GetTimerManager().SetTimer(TimerHandle_ShotTimerExpired, this, &AArcadeSHMUPPawn::ShotTimerExpired, FireRate);
-
-			// try and play the sound if specified
-			if (FireSound != nullptr)
-			{
-				UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
-			}
-
-			bCanFire = false;
+			return ArrowForShotgun1;
 		}
+		else
+		{
+			return ArrowForShotgun2;
+		}
+		break;
+	case 1:
+		if (bIsFirst)
+		{
+			return ArrowForMachinegun1;
+		}
+		else
+		{
+			return ArrowForMachinegun2;
+		}
+		break;
+	case 2:
+		if (bIsFirst)
+		{
+			return ArrowForRifle1;
+		}
+		else
+		{
+			return ArrowForRifle2;
+		}
+		break;
+	case 3:
+		if (bIsFirst)
+		{
+			return ArrowForLazer1;
+		}
+		else
+		{
+			return ArrowForLazer2;
+		}
+		break;
+	case 4:
+		if (bIsFirst)
+		{
+			return ArrowForRocket1;
+		}
+		else
+		{
+			return ArrowForRocket2;
+		}
+		break;
+	case 5:
+		if (bIsFirst)
+		{
+			return ArrowForArc1;
+		}
+		else
+		{
+			return ArrowForArc2;
+		}
+		break;
 	}
+	return ArrowForShotgun1;
 }
 
-void AArcadeSHMUPPawn::ShotTimerExpired()
+void AArcadeSHMUPPawn::AttemptSuper()
 {
-	bCanFire = true;
 }
+
 
