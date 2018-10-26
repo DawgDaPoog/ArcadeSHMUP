@@ -94,6 +94,7 @@ void AArcadeSHMUPPawn::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 	PlayerInputComponent->BindAxis(MoveRightBinding);
 	PlayerInputComponent->BindAxis(TurnClockwiseBinding);
 	PlayerInputComponent->BindAxis(FireBinding);
+
 	PlayerInputComponent->BindAction(FName("Super"), IE_Pressed, this, &AArcadeSHMUPPawn::AttemptSuper);
 }
 
@@ -103,8 +104,9 @@ void AArcadeSHMUPPawn::Tick(float DeltaSeconds)
 	const float RightValue = GetInputAxisValue(MoveRightBinding);
 
 	const float ClockWiseTurnValue = GetInputAxisValue(TurnClockwiseBinding);
-	// Create fire direction vector
-	const FVector FireDirection = FVector(GetActorForwardVector());
+
+	const float FireValue = GetInputAxisValue(FireBinding);
+
 
 	FVector MovementVector = FVector(ForwardValue*ShipThrottle*cos(0.785398*RightValue), RightValue*ShipThrottle*cos(0.785398*ForwardValue), 0.f);
 
@@ -112,11 +114,26 @@ void AArcadeSHMUPPawn::Tick(float DeltaSeconds)
 	
 	SetActorRotation(GetActorRotation() + FRotator(0.f, ClockWiseTurnValue*TurnRate, 0.f)*DeltaSeconds);
 
+	if (FireValue == 1.f)
+	{
+		AttemptFireShot();
+	}
 }
 
-void AArcadeSHMUPPawn::AttemptFireShot(FVector FireDirection)
+void AArcadeSHMUPPawn::BeginPlay()
 {
-	
+	Super::BeginPlay();
+	if (ShootingComponent)
+	{
+		ShootingComponent->OnWeaponPickup(0);
+		ShootingComponent->OnWeaponPickup(0);
+		ShootingComponent->OnWeaponPickup(0);
+	}
+}
+
+void AArcadeSHMUPPawn::AttemptFireShot()
+{
+	ShootingComponent->AttemptShooting();
 }
 
 UArrowComponent* AArcadeSHMUPPawn::GetArrowForWeapon(int32 WeaponIndex, bool bIsFirst)
@@ -189,6 +206,7 @@ UArrowComponent* AArcadeSHMUPPawn::GetArrowForWeapon(int32 WeaponIndex, bool bIs
 
 void AArcadeSHMUPPawn::AttemptSuper()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Supering"));
 }
 
 

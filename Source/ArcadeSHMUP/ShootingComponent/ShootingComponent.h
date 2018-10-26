@@ -54,13 +54,17 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 		TSubclassOf<class AWeapon> Arc;
 
-	void OnWeaponPickup(int32 WeaponNumber);
+	void OnWeaponPickup(int32 WeaponIndex);
+	void SequencePickupWeapon( const int32 &WeaponNumber);
 	int32 CheckAmountOfSpawnedByType(FName Type);
 	// 0 - shotgun, 1 - Machinegun, 2 - Rifle, 3 - Lazer, 4 - Rocket, 5 - Arc
 	
+	void AttemptShooting();
 private:
 	void AdjustWeaponsPositions();
 
+	UFUNCTION()
+	void ReactOnWeaponFire(const float KnockbackForce);
 	
-	TSet<FWeaponArrowReference> WeaponsArrows;
+	TArray<FWeaponArrowReference> WeaponsArrows;
 };

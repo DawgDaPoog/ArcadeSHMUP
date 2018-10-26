@@ -71,11 +71,12 @@ public:
 
 	// Begin Actor Interface
 	virtual void Tick(float DeltaSeconds) override;
+	virtual void BeginPlay() override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 	// End Actor Interface
 
 	/* Fire a shot in the specified direction */
-	void AttemptFireShot(FVector FireDirection);
+	void AttemptFireShot();
 
 
 	// Static names for axis bindings

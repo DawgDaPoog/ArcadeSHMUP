@@ -13,6 +13,7 @@ UCLASS()
 class ARCADESHMUP_API AShotgun : public AWeapon
 {
 	GENERATED_BODY()
+		AShotgun();
 
 		virtual void Fire() override;
 	

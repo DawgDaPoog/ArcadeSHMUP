@@ -33,37 +33,82 @@ void UShootingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	AdjustWeaponsPositions();
 }
 
-void UShootingComponent::OnWeaponPickup(int32 WeaponNumber)
+void UShootingComponent::OnWeaponPickup(int32 WeaponIndex)
 {
+	SequencePickupWeapon(WeaponIndex);
+}
+
+void UShootingComponent::SequencePickupWeapon(const int32 &WeaponNumber)
+{
+	//Figure out what kind of weapon we need to spawn or upgrade depending on a weapon number
+	TSubclassOf<AWeapon> WeaponToSpawn;
+	FName WeaponType;
 	if (WeaponNumber == 0)
 	{
-		int32 HowManyHasAlreadyBeenSpawned = CheckAmountOfSpawnedByType(FName("Shotgun"));
-		//Shotgun picked up
-		
-		if (HowManyHasAlreadyBeenSpawned == 0 || HowManyHasAlreadyBeenSpawned == 1)
-		{
-			FWeaponArrowReference NewReference = FWeaponArrowReference();
-			bool bIsFirst = (HowManyHasAlreadyBeenSpawned == 0);
+		WeaponToSpawn = Shotgun;
+		WeaponType = FName("Shotgun");
+	}
+	else if (WeaponNumber == 1)
+	{
+		WeaponToSpawn = Machinegun;
+		WeaponType = FName("Machinegun");
+	}
+	else if (WeaponNumber == 2)
+	{
+		WeaponToSpawn = Rifle;
+		WeaponType = FName("Rifle");
+	}
+	else if (WeaponNumber == 3)
+	{
+		WeaponToSpawn = Lazer;
+		WeaponType = FName("Lazer");
+	}
+	else if (WeaponNumber == 4)
+	{
+		WeaponToSpawn = Rocket;
+		WeaponType = FName("Rocket");
+	}
+	else if (WeaponNumber == 5)
+	{
+		WeaponToSpawn = Arc;
+		WeaponType = FName("Arc");
+	}
+	else return;
+	//Figure out how many weapons of such time was already spawned
+	int32 HowManyHasAlreadyBeenSpawned = CheckAmountOfSpawnedByType(WeaponType);
 
-			NewReference.Arrow = Cast<AArcadeSHMUPPawn>(GetOwner())->GetArrowForWeapon(0,true);
-			NewReference.Weapon = GetWorld()->SpawnActor<AWeapon>(Shotgun, NewReference.Arrow->GetComponentLocation(), NewReference.Arrow->GetComponentRotation());
-			NewReference.Type = FName("Shotgun");
-		}
-		else
+	
+	if (HowManyHasAlreadyBeenSpawned < 2)
+	{
+		FWeaponArrowReference NewReference = FWeaponArrowReference();
+		bool bIsFirst = (HowManyHasAlreadyBeenSpawned == 0); // See if it's first
+
+		 // Getting the reference of an arrow for the given weapon number + it's order
+		NewReference.Arrow = Cast<AArcadeSHMUPPawn>(GetOwner())->GetArrowForWeapon(WeaponNumber, bIsFirst);
+
+		//Spawn a given weapon and save it to a reference
+		NewReference.Weapon = GetWorld()->SpawnActor<AWeapon>(WeaponToSpawn, NewReference.Arrow->GetComponentLocation(), NewReference.Arrow->GetComponentRotation());
+		//Set a type for further actions
+		NewReference.Type = WeaponType;
+		//Add to list of weapons
+		WeaponsArrows.Add(NewReference);
+
+		UE_LOG(LogTemp, Warning, TEXT("Created, Binding"));
+		//Subscribing to the Weapons OnFire delegate to start the knockback sequence
+		NewReference.Weapon->OnFire.AddUniqueDynamic(this, &UShootingComponent::ReactOnWeaponFire);
+	}
+	else
+	{
+		for (auto WeaponArrow : WeaponsArrows)
 		{
-			for (auto WeaponArrow : WeaponsArrows)
+			if (WeaponArrow.Type == WeaponType)
 			{
-				if (WeaponArrow.Type == FName("Shotgun"))
-				{
-					WeaponArrow.Weapon->Upgrade();
-				}
-
+				WeaponArrow.Weapon->Upgrade();
 			}
 		}
-
 	}
 }
 
@@ -80,9 +125,27 @@ int32 UShootingComponent::CheckAmountOfSpawnedByType(FName Type)
 	return HowManyHasAlreadyBeenSpawned;
 }
 
+void UShootingComponent::AttemptShooting()
+{
+	for (auto WeaponArrow : WeaponsArrows)
+	{
+		WeaponArrow.Weapon->AttemptFire();
+	}
+}
+
 void UShootingComponent::AdjustWeaponsPositions()
 {
+	for (auto WeaponArrow : WeaponsArrows)
+	{
+		WeaponArrow.Weapon->SetActorRotation(WeaponArrow.Arrow->GetComponentRotation());
+		WeaponArrow.Weapon->SetActorLocation(WeaponArrow.Arrow->GetComponentLocation());
+	}
+}
 
+void UShootingComponent::ReactOnWeaponFire(const float KnockbackForce)
+{
+	auto ShipMeshReferense = Cast<AArcadeSHMUPPawn>(GetOwner())->GetShipMeshComponent();
+	ShipMeshReferense->AddImpulse(-ShipMeshReferense->GetForwardVector()*KnockbackForce);
 }
 
 

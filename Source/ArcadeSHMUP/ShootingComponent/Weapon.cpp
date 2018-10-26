@@ -29,7 +29,7 @@ void AWeapon::BeginPlay()
 
 void AWeapon::Fire()
 {
-
+	OnFire.Broadcast(KnockbackForce);
 }
 
 // Called every frame
@@ -40,7 +40,6 @@ void AWeapon::Tick(float DeltaTime)
 }
 void AWeapon::AttemptFire()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Attempting Fire"));
 	if (!bIsReloading) {
 		Fire();
 		SetReloadTimer();

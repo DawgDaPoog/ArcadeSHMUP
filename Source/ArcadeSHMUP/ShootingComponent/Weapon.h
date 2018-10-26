@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Weapon.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FWeaponDelegate, const float, KnockbackForce);
+
 UCLASS()
 class ARCADESHMUP_API AWeapon : public AActor
 {
@@ -23,6 +25,8 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
 	TSubclassOf<AActor> Projectile;
+
+	FWeaponDelegate OnFire;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
