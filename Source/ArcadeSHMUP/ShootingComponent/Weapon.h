@@ -24,7 +24,7 @@ public:
 	class UParticleSystemComponent* ParticlesOnShot;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
-	TSubclassOf<AActor> Projectile;
+	TSubclassOf<class AProjectile> Projectile;
 
 	FWeaponDelegate OnFire;
 protected:

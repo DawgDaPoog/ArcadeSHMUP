@@ -14,6 +14,7 @@
 #include "Sound/SoundBase.h"
 #include "ShootingComponent/ShootingComponent.h"
 #include "Components/ArrowComponent.h"
+#include "TimerManager.h"
 
 const FName AArcadeSHMUPPawn::MoveForwardBinding("UpMovement");
 const FName AArcadeSHMUPPawn::MoveRightBinding("RightMovement");
@@ -28,7 +29,8 @@ AArcadeSHMUPPawn::AArcadeSHMUPPawn()
 	RootComponent = ShipMeshComponent;
 	ShipMeshComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
 	ShipMeshComponent->SetStaticMesh(ShipMesh.Object);
-	
+	ShipMeshComponent->SetSimulatePhysics(true);
+
 	// Cache our sound effect
 	static ConstructorHelpers::FObjectFinder<USoundBase> FireAudio(TEXT("/Game/TwinStick/Audio/TwinStickFire.TwinStickFire"));
 	FireSound = FireAudio.Object;
@@ -123,12 +125,25 @@ void AArcadeSHMUPPawn::Tick(float DeltaSeconds)
 void AArcadeSHMUPPawn::BeginPlay()
 {
 	Super::BeginPlay();
-	if (ShootingComponent)
-	{
-		ShootingComponent->OnWeaponPickup(0);
-		ShootingComponent->OnWeaponPickup(0);
-		ShootingComponent->OnWeaponPickup(0);
-	}
+
+
+		if (ShootingComponent)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Went in the func"));
+			ShootingComponent->OnWeaponPickup(0);
+			ShootingComponent->OnWeaponPickup(0);
+			ShootingComponent->OnWeaponPickup(1);
+			ShootingComponent->OnWeaponPickup(1);
+			ShootingComponent->OnWeaponPickup(2);
+			ShootingComponent->OnWeaponPickup(2);
+			ShootingComponent->OnWeaponPickup(3);
+			ShootingComponent->OnWeaponPickup(3);
+			ShootingComponent->OnWeaponPickup(4);
+			ShootingComponent->OnWeaponPickup(4);
+			ShootingComponent->OnWeaponPickup(5);
+			ShootingComponent->OnWeaponPickup(5);
+		}
+	
 }
 
 void AArcadeSHMUPPawn::AttemptFireShot()

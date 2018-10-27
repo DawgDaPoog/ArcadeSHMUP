@@ -17,5 +17,9 @@ class ARCADESHMUP_API AShotgun : public AWeapon
 
 		virtual void Fire() override;
 	
+public:
+	float Spread = 20.f;
+	int AmountOfSpawnedProjectiles = 10;
 	
+
 };

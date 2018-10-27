@@ -6,7 +6,7 @@
 #include "Particles/ParticleSystemComponent.h"
 #include "TimerManager.h"
 #include "Engine/World.h"
-
+#include "Projectile.h"
 // Sets default values
 AWeapon::AWeapon()
 {

@@ -38,16 +38,19 @@ void UShootingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 
 void UShootingComponent::OnWeaponPickup(int32 WeaponIndex)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Went in the OnPickupWeapon"));
 	SequencePickupWeapon(WeaponIndex);
 }
 
 void UShootingComponent::SequencePickupWeapon(const int32 &WeaponNumber)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Went in the Sequence"));
 	//Figure out what kind of weapon we need to spawn or upgrade depending on a weapon number
 	TSubclassOf<AWeapon> WeaponToSpawn;
 	FName WeaponType;
 	if (WeaponNumber == 0)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Went in the Shotgun"));
 		WeaponToSpawn = Shotgun;
 		WeaponType = FName("Shotgun");
 	}
@@ -77,6 +80,7 @@ void UShootingComponent::SequencePickupWeapon(const int32 &WeaponNumber)
 		WeaponType = FName("Arc");
 	}
 	else return;
+
 	//Figure out how many weapons of such time was already spawned
 	int32 HowManyHasAlreadyBeenSpawned = CheckAmountOfSpawnedByType(WeaponType);
 
@@ -114,6 +118,9 @@ void UShootingComponent::SequencePickupWeapon(const int32 &WeaponNumber)
 
 int32 UShootingComponent::CheckAmountOfSpawnedByType(FName Type)
 {
+	
+	UE_LOG(LogTemp, Warning, TEXT("Went in the CheckAmountOfSpawned"));
+
 	int32 HowManyHasAlreadyBeenSpawned = 0;
 	for (auto WeaponsArrow : WeaponsArrows)
 	{
@@ -122,7 +129,9 @@ int32 UShootingComponent::CheckAmountOfSpawnedByType(FName Type)
 			HowManyHasAlreadyBeenSpawned++;
 		}
 	}
+	UE_LOG(LogTemp, Warning, TEXT("Finished in the CheckAmountOfSpawned"));
 	return HowManyHasAlreadyBeenSpawned;
+
 }
 
 void UShootingComponent::AttemptShooting()
