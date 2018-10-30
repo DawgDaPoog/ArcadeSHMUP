@@ -23,17 +23,16 @@ const FName AArcadeSHMUPPawn::FireBinding("Shoot");
 
 AArcadeSHMUPPawn::AArcadeSHMUPPawn()
 {	
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> ShipMesh(TEXT("/Game/TwinStick/Meshes/TwinStickUFO.TwinStickUFO"));
 	// Create the mesh component
 	ShipMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShipMesh"));
 	RootComponent = ShipMeshComponent;
 	ShipMeshComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
-	ShipMeshComponent->SetStaticMesh(ShipMesh.Object);
+
 	ShipMeshComponent->SetSimulatePhysics(true);
 
 	// Cache our sound effect
-	static ConstructorHelpers::FObjectFinder<USoundBase> FireAudio(TEXT("/Game/TwinStick/Audio/TwinStickFire.TwinStickFire"));
-	FireSound = FireAudio.Object;
+
+	
 
 	// Create a camera boom...
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
@@ -125,30 +124,16 @@ void AArcadeSHMUPPawn::Tick(float DeltaSeconds)
 void AArcadeSHMUPPawn::BeginPlay()
 {
 	Super::BeginPlay();
-
-
-		if (ShootingComponent)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Went in the func"));
-			ShootingComponent->OnWeaponPickup(0);
-			ShootingComponent->OnWeaponPickup(0);
-			ShootingComponent->OnWeaponPickup(1);
-			ShootingComponent->OnWeaponPickup(1);
-			ShootingComponent->OnWeaponPickup(2);
-			ShootingComponent->OnWeaponPickup(2);
-			ShootingComponent->OnWeaponPickup(3);
-			ShootingComponent->OnWeaponPickup(3);
-			ShootingComponent->OnWeaponPickup(4);
-			ShootingComponent->OnWeaponPickup(4);
-			ShootingComponent->OnWeaponPickup(5);
-			ShootingComponent->OnWeaponPickup(5);
-		}
-	
 }
 
 void AArcadeSHMUPPawn::AttemptFireShot()
 {
 	ShootingComponent->AttemptShooting();
+}
+
+UShootingComponent * AArcadeSHMUPPawn::GetShootingComponent()
+{
+	return ShootingComponent;
 }
 
 UArrowComponent* AArcadeSHMUPPawn::GetArrowForWeapon(int32 WeaponIndex, bool bIsFirst)

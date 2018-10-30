@@ -78,6 +78,8 @@ public:
 	/* Fire a shot in the specified direction */
 	void AttemptFireShot();
 
+	//Getter for the shooting component of a player
+	UShootingComponent* GetShootingComponent();
 
 	// Static names for axis bindings
 	static const FName MoveForwardBinding;

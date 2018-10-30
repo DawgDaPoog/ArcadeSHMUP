@@ -6,6 +6,6 @@
 AArcadeSHMUPGameMode::AArcadeSHMUPGameMode()
 {
 	// set default pawn class to our character class
-	DefaultPawnClass = AArcadeSHMUPPawn::StaticClass();
+	DefaultPawnClass = NULL;
 }
 
