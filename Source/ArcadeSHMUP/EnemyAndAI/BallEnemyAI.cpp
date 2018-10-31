@@ -19,7 +19,7 @@ void ABallEnemyAI::Possess(APawn * InPawn)
 {
 	Super::Possess(InPawn);
 
-	AEnemyBallPawn* Pawn = Cast<AEnemyBallPawn>(InPawn);
+	Pawn = Cast<AEnemyBallPawn>(InPawn);
 
 	if (Pawn && Pawn->BehaviorTree)
 	{
@@ -30,3 +30,25 @@ void ABallEnemyAI::Possess(APawn * InPawn)
 		BehaviorComp->StartTree(*Pawn->BehaviorTree);
 	}
 }
+
+FVector ABallEnemyAI::GetOwnerPosition()
+{
+	return Pawn->GetActorLocation();
+}
+
+void ABallEnemyAI::SetOwnerMovePoint(FVector MoveTo)
+{
+	Pawn->SetPointDestination(MoveTo);
+	Pawn->bIsMovingToPoint = true;
+}
+
+void ABallEnemyAI::ResetOwnerMovePoint()
+{
+	Pawn->bIsMovingToPoint = false;
+}
+
+void ABallEnemyAI::StartAttackSequence(FVector Direction)
+{
+	Pawn->StartAttackAt(Direction);
+}
+

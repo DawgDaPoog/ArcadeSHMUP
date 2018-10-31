@@ -5,22 +5,57 @@
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/Blackboard/BlackboardKeyAllTypes.h"
+#include "Engine/World.h"
+#include "TimerManager.h"
 #include "BallEnemyAI.h"
+
+UBTTask_MoveToSpot::UBTTask_MoveToSpot(const FObjectInitializer& objectInitializer)
+{
+	bNotifyTick = true;
+}
 
 EBTNodeResult::Type UBTTask_MoveToSpot::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
+	//APawn* Player = Cast<APawn>(OwnerComp.GetBlackboardComponent()->GetValue<UBlackboardKeyType_Object>(EnemyAI->EnemyKeyID));
 	ABallEnemyAI* EnemyAI = Cast<ABallEnemyAI>(OwnerComp.GetAIOwner());
 
-	APawn* Player = Cast<APawn>(OwnerComp.GetBlackboardComponent()->GetValue<UBlackboardKeyType_Object>(EnemyAI->EnemyKeyID));
-	if (Player)
+	FTimerHandle BreakHandle;
+	GetWorld()->GetTimerManager().SetTimer(
+		BreakHandle, 
+		[this,&OwnerComp,EnemyAI]()
+		{
+			EnemyAI->ResetOwnerMovePoint();
+			FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+		}, 
+		1.5f, 
+		false
+		);
+
+
+	FVector CurrentPosition = EnemyAI->GetOwnerPosition();
+	RandomVectorCloseBy = CurrentPosition;
+	float MinRange = 400.f;
+	float MaxRange = 700.f;
+
+	while (FVector::Dist(RandomVectorCloseBy, CurrentPosition) < MinRange)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("We got a task telling me to move towards %s"), *Player->GetName());
-		return EBTNodeResult::Succeeded;
+		RandomVectorCloseBy = FVector(FMath::RandRange(CurrentPosition.X - MaxRange, CurrentPosition.X + MaxRange), FMath::RandRange(CurrentPosition.Y - MaxRange, CurrentPosition.Y + MaxRange), CurrentPosition.Z);
 	}
-	else
+	
+	EnemyAI->SetOwnerMovePoint(RandomVectorCloseBy);
+
+	return EBTNodeResult::InProgress;
+}
+
+void UBTTask_MoveToSpot::TickTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory, float DeltaSeconds)
+{
+	ABallEnemyAI* EnemyAI = Cast<ABallEnemyAI>(OwnerComp.GetAIOwner());
+	FVector CurrentPosition = EnemyAI->GetOwnerPosition();
+
+	if (CurrentPosition.Equals(RandomVectorCloseBy, 50.f))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Task failed, didn't get the player"));
-		return EBTNodeResult::Failed;
+		EnemyAI->ResetOwnerMovePoint();
+		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 	}
 }
 

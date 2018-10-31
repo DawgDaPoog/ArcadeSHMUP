@@ -21,10 +21,18 @@ class ARCADESHMUP_API ABallEnemyAI : public AAIController
 	UPROPERTY(Transient)
 	class UBehaviorTreeComponent* BehaviorComp;
 
+	class AEnemyBallPawn* Pawn;
 public:
 	ABallEnemyAI();
 
 	virtual void Possess(APawn *InPawn) override;
 	
 	uint8 EnemyKeyID;
+
+	FVector GetOwnerPosition();
+
+	void SetOwnerMovePoint(FVector MoveTo);
+	void ResetOwnerMovePoint();
+
+	void StartAttackSequence(FVector Direction);
 };
