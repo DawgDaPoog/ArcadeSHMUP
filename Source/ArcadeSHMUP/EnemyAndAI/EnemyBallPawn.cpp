@@ -7,12 +7,7 @@
 AEnemyBallPawn::AEnemyBallPawn()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-
-	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("Mesh"));
-	RootComponent = Mesh;
-	Mesh->SetConstraintMode(EDOFMode::XYPlane);
-	Mesh->SetSimulatePhysics(true);
+	
 }
 
 // Called when the game starts or when spawned
@@ -30,7 +25,6 @@ void AEnemyBallPawn::Tick(float DeltaTime)
 	FVector ForceApply = FVector(0.f);
 	if (bIsMovingToPoint)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("ApplyingForce"));
 		FVector DirectionVector = Destination - GetActorLocation();
 		FVector Direction = DirectionVector.GetSafeNormal();
 
@@ -40,16 +34,11 @@ void AEnemyBallPawn::Tick(float DeltaTime)
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("not ApplyingForce"));
+		//UE_LOG(LogTemp, Warning, TEXT("not ApplyingForce"));
 	}
 }
 
-// Called to bind functionality to input
-void AEnemyBallPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-}
 
 void AEnemyBallPawn::SequenceLaunchAt(FVector VectorToLaunch)
 {

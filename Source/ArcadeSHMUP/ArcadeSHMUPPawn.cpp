@@ -10,6 +10,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Engine/CollisionProfile.h"
 #include "Engine/StaticMesh.h"
+#include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundBase.h"
 #include "ShootingComponent/ShootingComponent.h"
@@ -207,6 +208,27 @@ UArrowComponent* AArcadeSHMUPPawn::GetArrowForWeapon(int32 WeaponIndex, bool bIs
 void AArcadeSHMUPPawn::AttemptSuper()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Supering"));
+}
+
+void AArcadeSHMUPPawn::TakeDamage()
+{
+	if (bIsInvincible) return;
+	UE_LOG(LogTemp, Warning, TEXT("Took damage. Ouch."));
+	HowMuchHPLeft--;
+	if (HowMuchHPLeft <= 0)
+	{
+		Destroy();
+	}
+
+	bIsInvincible = true;
+	FTimerHandle Handle;
+	FTimerDelegate Delegate;
+
+	Delegate.BindLambda([&]()
+	{
+		bIsInvincible = false;
+	});
+	GetWorldTimerManager().SetTimer(Handle, Delegate, 1.5f, false);
 }
 
 

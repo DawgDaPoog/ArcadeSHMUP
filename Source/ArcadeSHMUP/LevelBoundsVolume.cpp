@@ -12,5 +12,9 @@ void ALevelBoundsVolume::NotifyActorEndOverlap(AActor * OtherActor)
 {
 	Super::NotifyActorEndOverlap(OtherActor);
 	
-	OtherActor->SetActorLocation(FVector(-OtherActor->GetActorLocation().X - FMath::Sign(-OtherActor->GetActorLocation().X)*20.f,-OtherActor->GetActorLocation().Y - FMath::Sign(-OtherActor->GetActorLocation().Y)*20.f , OtherActor->GetActorLocation().Z));
+	// Setting an actor on the other side of the map if it is player or enemy
+	if (OtherActor->ActorHasTag(FName("Player")) || OtherActor->ActorHasTag(FName("Enemy")))
+	{
+		OtherActor->SetActorLocation(FVector(-OtherActor->GetActorLocation().X - FMath::Sign(-OtherActor->GetActorLocation().X)*20.f, -OtherActor->GetActorLocation().Y - FMath::Sign(-OtherActor->GetActorLocation().Y)*20.f, OtherActor->GetActorLocation().Z));
+	}
 }

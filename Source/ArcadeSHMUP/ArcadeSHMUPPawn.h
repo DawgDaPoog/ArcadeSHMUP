@@ -65,6 +65,8 @@ class AArcadeSHMUPPawn : public APawn
 public:
 	AArcadeSHMUPPawn();
 
+	void TakeDamage();
+
 	/** Sound to play each time we fire */
 	UPROPERTY(Category = Audio, EditAnywhere, BlueprintReadWrite)
 	class USoundBase* FireSound;
@@ -98,6 +100,12 @@ private:
 
 	void AttemptSuper();
 
+	//Damage System Interface
+
+
+	bool bIsInvincible = false;
+
+	int32 HowMuchHPLeft = 3;
 public:
 	/** Returns ShipMeshComponent subobject **/
 	FORCEINLINE class UStaticMeshComponent* GetShipMeshComponent() const { return ShipMeshComponent; }
