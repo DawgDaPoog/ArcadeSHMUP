@@ -1,6 +1,7 @@
 // Copyright Vladyslav Kulinych 2018. All Rights Reserved.
 
 #include "RocketProjectile.h"
+#include "EnemyAndAI/Enemy.h"
 
 ARocketProjectile::ARocketProjectile()
 {
@@ -13,7 +14,11 @@ ARocketProjectile::ARocketProjectile()
 
 void ARocketProjectile::ReactToEnemy(AActor * Enemy)
 {
+	Super::ReactToEnemy(Enemy);
 
+	//Spawn AOE
+
+	Destroy();
 }
 
 

@@ -19,4 +19,7 @@ class ARCADESHMUP_API ARifleProjectile : public AProjectile
 protected:
 	virtual void ReactToEnemy(AActor* Enemy) override;
 	
+private:
+	bool bHasHitEnemyAlready = false;
+	
 };

@@ -11,7 +11,15 @@ AArcProjectile::AArcProjectile()
 void AArcProjectile::InitiateSequenceDealDamage()
 {
 	//Deal damage to all overlapping enemies
-	UE_LOG(LogTemp, Warning, TEXT("Being Destroyed"));
+	TSet<AActor*> Actors;
+	GetOverlappingActors(Actors);
+	for (auto OverlappingActor : Actors)
+	{
+		if (OverlappingActor->ActorHasTag("Enemy"))
+		{
+			ReactToEnemy(OverlappingActor);
+		}
+	}
 	Destroy();
 }
 

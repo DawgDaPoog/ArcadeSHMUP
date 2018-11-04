@@ -2,6 +2,7 @@
 
 #include "MachinegunProjectile.h"
 
+
 AMachinegunProjectile::AMachinegunProjectile()
 {
 	ProjectileInitialSpeed = 3000.f;
@@ -10,4 +11,6 @@ AMachinegunProjectile::AMachinegunProjectile()
 
 void AMachinegunProjectile::ReactToEnemy(AActor * Enemy)
 {
+	Super::ReactToEnemy(Enemy);
+	Destroy();
 }

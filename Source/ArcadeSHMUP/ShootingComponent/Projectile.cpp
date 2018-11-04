@@ -3,7 +3,7 @@
 #include "Projectile.h"
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
-
+#include "EnemyAndAI/Enemy.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -13,6 +13,8 @@ AProjectile::AProjectile()
 
 	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("ProjectileMesh"));
 	ProjectileMesh->SetCollisionProfileName("OverlapAll");
+	ProjectileMesh->SetSimulatePhysics(true);
+
 	RootComponent = ProjectileMesh;
 }
 
@@ -33,13 +35,14 @@ void AProjectile::NotifyActorBeginOverlap(AActor * OtherActor)
 
 void AProjectile::ReactToEnemy(AActor * Enemy)
 {
-	// Do something to enemy
+	Cast<AEnemy>(Enemy)->TakeDamage(Damage);
 }
 
 void AProjectile::Move(float DeltaTime)
 {
 	SetActorLocation(GetActorLocation() + GetActorForwardVector()*ProjectileCurrentSpeed*DeltaTime);
-
+	//ProjectileMesh->SetPhysicsLinearVelocity(GetActorForwardVector()*ProjectileCurrentSpeed);
+	
 	if (ProjectileCurrentSpeed >= ProjectileMaxSpeed)
 	{
 		ProjectileCurrentSpeed = ProjectileMaxSpeed;
@@ -56,8 +59,6 @@ void AProjectile::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	Move(DeltaTime);
-	
-
 }
 
 void AProjectile::SetDamage(float DamageToSet)

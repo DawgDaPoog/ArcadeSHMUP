@@ -1,6 +1,7 @@
 // Copyright Vladyslav Kulinych 2018. All Rights Reserved.
 
 #include "ShotgunProjectile.h"
+#include "EnemyAndAI/Enemy.h"
 
 AShotgunProjectile::AShotgunProjectile()
 {
@@ -10,7 +11,8 @@ AShotgunProjectile::AShotgunProjectile()
 
 void AShotgunProjectile::ReactToEnemy(AActor * Enemy)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Enemy Hit!"));
+	Super::ReactToEnemy(Enemy);
+	Destroy();
 }
 
 

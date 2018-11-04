@@ -11,5 +11,6 @@ ALazerProjectile::ALazerProjectile()
 
 void ALazerProjectile::ReactToEnemy(AActor * Enemy)
 {
+	Super::ReactToEnemy(Enemy);
 }
 

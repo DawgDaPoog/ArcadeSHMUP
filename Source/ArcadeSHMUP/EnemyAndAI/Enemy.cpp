@@ -53,3 +53,13 @@ void AEnemy::Tick(float DeltaTime)
 
 }
 
+void AEnemy::TakeDamage(float Damage)
+{
+	HitPoints -= Damage;
+
+	if (HitPoints <= 0.f)
+	{
+		Destroy();
+	}
+}
+

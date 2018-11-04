@@ -27,6 +27,9 @@ protected:
 	virtual void NotifyActorBeginOverlap(AActor * OtherActor) override;
 
 	virtual void ReactToPlayer(class AArcadeSHMUPPawn* Player);
+
+	float HitPoints = 0.f;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -34,5 +37,5 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Behavior")
 		class UBehaviorTree* BehaviorTree;
 	
-	
+	void TakeDamage(float Damage);
 };

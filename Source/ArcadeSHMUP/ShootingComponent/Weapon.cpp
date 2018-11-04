@@ -29,7 +29,9 @@ void AWeapon::BeginPlay()
 
 AProjectile* AWeapon::Fire()
 {
-	FTransform SpawnLocation = FTransform(GetActorRotation(), GetActorLocation() + GetActorForwardVector()*4.f, FVector(1.f));
+	FVector Location = GetActorLocation() + GetActorForwardVector()*4.f;
+	Location.Z = 250.f;
+	FTransform SpawnLocation = FTransform(GetActorRotation(), Location, FVector(1.f));
 	auto SpawnedProjectile = GetWorld()->SpawnActorDeferred<AProjectile>(Projectile, SpawnLocation);
 	SpawnedProjectile->SetDamage(Damage);
 	SpawnedProjectile->FinishSpawning(SpawnLocation);
