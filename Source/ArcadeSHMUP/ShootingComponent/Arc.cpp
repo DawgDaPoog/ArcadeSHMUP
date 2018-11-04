@@ -12,11 +12,12 @@ AArc::AArc()
 }
 
 
-void AArc::Fire()
+AProjectile* AArc::Fire()
 {
-	auto SpawnedProjectile = GetWorld()->SpawnActor<AProjectile>(Projectile, FTransform(GetActorRotation(), GetActorLocation() + GetActorForwardVector()*5.f, FVector(1.f)));
-	SpawnedProjectile->SetDamage(Damage);
+	auto SpawnedProjectile = Super::Fire();
 	Cast<AArcProjectile>(SpawnedProjectile)->InitiateSequenceDealDamage();
 
-	Super::Fire(); // To broadcast fire delegate
+	BroadcastKnockback();
+
+	return SpawnedProjectile;
 }

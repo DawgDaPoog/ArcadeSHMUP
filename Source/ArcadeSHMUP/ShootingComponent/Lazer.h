@@ -15,7 +15,7 @@ class ARCADESHMUP_API ALazer : public AWeapon
 	GENERATED_BODY()
 		ALazer();
 
-		virtual void Fire() override;
+		virtual AProjectile* Fire() override;
 	
 	
 };

@@ -11,12 +11,10 @@ ALazer::ALazer()
 	Damage = 0.07f;
 }
 
-void ALazer::Fire()
+AProjectile* ALazer::Fire()
 {
-	auto SpawnedProjectile = GetWorld()->SpawnActor<AProjectile>(Projectile, FTransform(GetActorRotation(), GetActorLocation() + GetActorForwardVector()*4.f, FVector(1.f)));
-	SpawnedProjectile->SetDamage(Damage);
-
-	Super::Fire(); // To broadcast fire delegate
+	BroadcastKnockback();
+	return Super::Fire(); 
 }
 
 

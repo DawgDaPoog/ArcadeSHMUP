@@ -27,9 +27,14 @@ void AWeapon::BeginPlay()
 	
 }
 
-void AWeapon::Fire()
+AProjectile* AWeapon::Fire()
 {
-	OnFire.Broadcast(KnockbackForce);
+	FTransform SpawnLocation = FTransform(GetActorRotation(), GetActorLocation() + GetActorForwardVector()*4.f, FVector(1.f));
+	auto SpawnedProjectile = GetWorld()->SpawnActorDeferred<AProjectile>(Projectile, SpawnLocation);
+	SpawnedProjectile->SetDamage(Damage);
+	SpawnedProjectile->FinishSpawning(SpawnLocation);
+
+	return SpawnedProjectile;
 }
 
 // Called every frame
@@ -99,6 +104,11 @@ float AWeapon::GetProjectileSizeModificator()
 void AWeapon::SetProjectileSizeModificator(float Modificator)
 {
 	ProjectileSizeModificator *= Modificator;
+}
+
+void AWeapon::BroadcastKnockback()
+{
+	OnFire.Broadcast(KnockbackForce);
 }
 
 void AWeapon::SetReloadTimer()

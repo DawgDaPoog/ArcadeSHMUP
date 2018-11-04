@@ -15,7 +15,7 @@ class ARCADESHMUP_API AShotgun : public AWeapon
 	GENERATED_BODY()
 		AShotgun();
 
-		virtual void Fire() override;
+		virtual AProjectile* Fire() override;
 	
 public:
 	float Spread = 20.f;

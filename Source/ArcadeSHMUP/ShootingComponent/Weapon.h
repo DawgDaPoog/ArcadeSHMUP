@@ -31,7 +31,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	virtual void Fire();
+	virtual AProjectile* Fire();
 
 	float RateOfFire = 0.f;
 	float ProjectileSpeed = 0.f;
@@ -47,6 +47,8 @@ protected:
 	bool bIsReloading = false;
 
 	struct FTimerHandle ReloadTimer;
+
+	void BroadcastKnockback();
 private:
 
 	void SetReloadTimer();

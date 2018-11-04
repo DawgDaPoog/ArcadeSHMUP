@@ -11,16 +11,19 @@ AShotgun::AShotgun()
 	Damage = 5.f;
 }
 
-void AShotgun::Fire()
+AProjectile* AShotgun::Fire()
 {
 	if (Projectile)
 	{
+		AProjectile* SpawnedProjectile;
 		for (int i = 0; i < AmountOfSpawnedProjectiles; i++)
 		{
 			float RotationSpread = FMath::RandRange(-Spread, Spread);
-			auto SpawnedProjectile = GetWorld()->SpawnActor<AProjectile>(Projectile, FTransform(GetActorRotation()+FRotator(0.f, RotationSpread,0.f), GetActorLocation() + GetActorForwardVector()*5.f, FVector(1.f)));
+			SpawnedProjectile = Super::Fire();
+			SpawnedProjectile->SetActorRotation(GetActorRotation()+FRotator(0.f,RotationSpread,0.f));
 			SpawnedProjectile->SetDamage(Damage);
 		}
 	}
-	Super::Fire();
+	BroadcastKnockback();
+	return nullptr;
 }

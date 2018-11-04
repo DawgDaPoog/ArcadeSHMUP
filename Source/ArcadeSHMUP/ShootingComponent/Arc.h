@@ -16,7 +16,7 @@ class ARCADESHMUP_API AArc : public AWeapon
 
 		AArc();
 
-		virtual void Fire() override;
+		virtual AProjectile* Fire() override;
 	
 	
 };

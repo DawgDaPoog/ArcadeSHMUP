@@ -125,6 +125,16 @@ void AArcadeSHMUPPawn::Tick(float DeltaSeconds)
 void AArcadeSHMUPPawn::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (ShootingComponent)
+	{
+		ShootingComponent->OnWeaponPickup(0);
+		ShootingComponent->OnWeaponPickup(1);
+		ShootingComponent->OnWeaponPickup(2);
+		ShootingComponent->OnWeaponPickup(3);
+		ShootingComponent->OnWeaponPickup(4);
+		ShootingComponent->OnWeaponPickup(5);
+	}
 }
 
 void AArcadeSHMUPPawn::AttemptFireShot()

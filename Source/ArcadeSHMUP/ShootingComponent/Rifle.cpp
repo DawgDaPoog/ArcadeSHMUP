@@ -12,10 +12,8 @@ ARifle::ARifle()
 	Damage = 50.f;
 }
 
-void ARifle::Fire()
+AProjectile* ARifle::Fire()
 {
-	auto SpawnedProjectile = GetWorld()->SpawnActor<AProjectile>(Projectile, FTransform(GetActorRotation(), GetActorLocation() + GetActorForwardVector()*5.f, FVector(1.f)));
-	SpawnedProjectile->SetDamage(Damage);
-	
-	Super::Fire();
+	BroadcastKnockback();
+	return Super::Fire();
 }

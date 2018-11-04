@@ -16,7 +16,7 @@ class ARCADESHMUP_API ARifle : public AWeapon
 
 	ARifle();
 
-	virtual void Fire() override;
+	virtual AProjectile* Fire() override;
 
 	
 	

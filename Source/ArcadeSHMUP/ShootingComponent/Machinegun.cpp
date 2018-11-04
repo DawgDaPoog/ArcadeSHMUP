@@ -12,12 +12,10 @@ AMachinegun::AMachinegun()
 	Damage = 1.f;
 }
 
-void AMachinegun::Fire()
+AProjectile* AMachinegun::Fire()
 {
-	auto SpawnedProjectile = GetWorld()->SpawnActor<AProjectile>(Projectile, FTransform(GetActorRotation(), GetActorLocation() + GetActorForwardVector()*5.f, FVector(1.f)));
-	SpawnedProjectile->SetDamage(Damage);
-
-	Super::Fire(); // To broadcast fire delegate
+	BroadcastKnockback();
+	return Super::Fire(); 
 }
 
 

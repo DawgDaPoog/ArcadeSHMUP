@@ -14,9 +14,6 @@ AProjectile::AProjectile()
 	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("ProjectileMesh"));
 	ProjectileMesh->SetCollisionProfileName("OverlapAll");
 	RootComponent = ProjectileMesh;
-
-	
-	
 }
 
 // Called when the game starts or when spawned
