@@ -3,16 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Enemy.h"
 #include "Debree.generated.h"
 
 UCLASS()
-class ARCADESHMUP_API ADebree : public AActor
+class ARCADESHMUP_API ADebree : public AEnemy
 {
 	GENERATED_BODY()
-	
-	UPROPERTY(Category = Mesh, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	class UStaticMeshComponent* Mesh;
 
 	UPROPERTY(Category = "Spawn", EditDefaultsOnly)
 		TSubclassOf<ADebree> Debree;
@@ -24,6 +21,8 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	virtual void SequenceDestroy() override;
 
 public:	
 	// Called every frame

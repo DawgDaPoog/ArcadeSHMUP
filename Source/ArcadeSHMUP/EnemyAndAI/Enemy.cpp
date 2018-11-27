@@ -46,6 +46,11 @@ void AEnemy::ReactToPlayer(AArcadeSHMUPPawn * Player)
 	Player->TakeDamage();
 }
 
+void AEnemy::SequenceDestroy()
+{
+	Destroy();
+}
+
 // Called every frame
 void AEnemy::Tick(float DeltaTime)
 {
@@ -59,7 +64,7 @@ void AEnemy::TakeDamage(float Damage)
 
 	if (HitPoints <= 0.f)
 	{
-		Destroy();
+		SequenceDestroy();
 	}
 }
 

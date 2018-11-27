@@ -30,6 +30,7 @@ protected:
 
 	float HitPoints = 0.f;
 
+	virtual void SequenceDestroy();
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

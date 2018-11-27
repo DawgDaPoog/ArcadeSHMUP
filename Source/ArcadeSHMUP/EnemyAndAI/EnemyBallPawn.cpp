@@ -6,8 +6,7 @@
 // Sets default values
 AEnemyBallPawn::AEnemyBallPawn()
 {
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	HitPoints = 10.f;
+	HitPoints = 50.f;
 }
 
 // Called when the game starts or when spawned

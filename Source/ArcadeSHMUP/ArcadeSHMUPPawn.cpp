@@ -128,12 +128,13 @@ void AArcadeSHMUPPawn::BeginPlay()
 
 	if (ShootingComponent)
 	{
-		ShootingComponent->OnWeaponPickup(0);
+		/*ShootingComponent->OnWeaponPickup(0);
 		ShootingComponent->OnWeaponPickup(1);
 		ShootingComponent->OnWeaponPickup(2);
 		ShootingComponent->OnWeaponPickup(3);
 		ShootingComponent->OnWeaponPickup(4);
-		ShootingComponent->OnWeaponPickup(5);
+		ShootingComponent->OnWeaponPickup(5)*/;
+
 	}
 }
 
