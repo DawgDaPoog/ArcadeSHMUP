@@ -8,9 +8,6 @@
 // Sets default values
 ADrop::ADrop()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("Mesh"));
 	Mesh->SetCollisionProfileName("OverlapAllDynamic");
 	RootComponent = Mesh;
@@ -28,15 +25,9 @@ void ADrop::BeginPlay()
 	
 }
 
-// Called every frame
-void ADrop::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
 void ADrop::NotifyPlayerPickedUp(AArcadeSHMUPPawn* Player)
 {
+	// Default behavior on pickup
 	Destroy();
 }
 
@@ -44,6 +35,7 @@ void ADrop::NotifyActorBeginOverlap(AActor * OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
 
+	// If it overlapped with the player, interract
 	if (OtherActor->ActorHasTag("Player"))
 	{
 		NotifyPlayerPickedUp(Cast<AArcadeSHMUPPawn>(OtherActor));

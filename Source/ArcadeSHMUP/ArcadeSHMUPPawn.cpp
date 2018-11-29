@@ -31,10 +31,6 @@ AArcadeSHMUPPawn::AArcadeSHMUPPawn()
 
 	ShipMeshComponent->SetSimulatePhysics(true);
 
-	// Cache our sound effect
-
-	
-
 	// Create a camera boom...
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
@@ -48,8 +44,10 @@ AArcadeSHMUPPawn::AArcadeSHMUPPawn()
 	CameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	CameraComponent->bUsePawnControlRotation = false;	// Camera does not rotate relative to arm
 
+	// Component to handle shooting
 	ShootingComponent = CreateDefaultSubobject<UShootingComponent>(FName("ShootingComponent"));
 
+	// Arrows to spawn weapons at
 	ArrowForShotgun1 = CreateDefaultSubobject<UArrowComponent>(FName("ArrowForShotgun1"));
 	ArrowForShotgun1->SetupAttachment(RootComponent);
 
@@ -97,25 +95,32 @@ void AArcadeSHMUPPawn::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 	PlayerInputComponent->BindAxis(TurnClockwiseBinding);
 	PlayerInputComponent->BindAxis(FireBinding);
 
+	// Super key binding
 	PlayerInputComponent->BindAction(FName("Super"), IE_Pressed, this, &AArcadeSHMUPPawn::AttemptSuper);
 }
 
 void AArcadeSHMUPPawn::Tick(float DeltaSeconds)
 {
+	// Checking movement values
 	const float ForwardValue = GetInputAxisValue(MoveForwardBinding);
 	const float RightValue = GetInputAxisValue(MoveRightBinding);
 
+	// Checking turning value
 	const float ClockWiseTurnValue = GetInputAxisValue(TurnClockwiseBinding);
 
+	// Checking fire value
 	const float FireValue = GetInputAxisValue(FireBinding);
 
-
+	// Movement vector
 	FVector MovementVector = FVector(ForwardValue*ShipThrottle*cos(0.785398*RightValue), RightValue*ShipThrottle*cos(0.785398*ForwardValue), 0.f);
 
+	// Adding movement force
 	ShipMeshComponent->AddForce(MovementVector);
 	
+	// Changing rotation
 	SetActorRotation(GetActorRotation() + FRotator(0.f, ClockWiseTurnValue*TurnRate, 0.f)*DeltaSeconds);
 
+	// Firing if we have proper fire value
 	if (FireValue == 1.f)
 	{
 		AttemptFireShot();
@@ -140,6 +145,7 @@ void AArcadeSHMUPPawn::BeginPlay()
 
 void AArcadeSHMUPPawn::AttemptFireShot()
 {
+	// Telling a shooting component to start shooting
 	ShootingComponent->AttemptShooting();
 }
 
@@ -150,6 +156,7 @@ UShootingComponent * AArcadeSHMUPPawn::GetShootingComponent()
 
 UArrowComponent* AArcadeSHMUPPawn::GetArrowForWeapon(int32 WeaponIndex, bool bIsFirst)
 {
+	// Determining for which arrow we are calling and retirning it
 	switch(WeaponIndex)
 	{
 	case 0:
@@ -223,22 +230,32 @@ void AArcadeSHMUPPawn::AttemptSuper()
 
 void AArcadeSHMUPPawn::TakeDamage()
 {
+	// If invincible, don't take any damage
 	if (bIsInvincible) return;
-	UE_LOG(LogTemp, Warning, TEXT("Took damage. Ouch."));
+
+	// Decrease HP if not invincible
 	HowMuchHPLeft--;
+
+	// If we have no hp left, destroy this actor and end current session
 	if (HowMuchHPLeft <= 0)
 	{
 		Destroy();
 	}
 
+	// Setting invincibility for a short time after being damaged
 	bIsInvincible = true;
+
+	// Timer handler and delegate to set invincibility end timer
 	FTimerHandle Handle;
 	FTimerDelegate Delegate;
 
+	// Setting a delegate
 	Delegate.BindLambda([&]()
 	{
 		bIsInvincible = false;
 	});
+
+	// Starting a timer to end invincibility after 1.5 sec
 	GetWorldTimerManager().SetTimer(Handle, Delegate, 1.5f, false);
 }
 

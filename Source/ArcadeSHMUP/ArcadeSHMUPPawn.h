@@ -23,6 +23,7 @@ class AArcadeSHMUPPawn : public APawn
 	UPROPERTY(Category = Camera, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
 
+	// Arrows to spawm weapoms at
 	UPROPERTY(Category = "Shooting", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		class UShootingComponent* ShootingComponent;
 	
@@ -65,6 +66,7 @@ class AArcadeSHMUPPawn : public APawn
 public:
 	AArcadeSHMUPPawn();
 
+	// Function that is called by enemies or enemy projectiles that deal damage
 	void TakeDamage();
 
 	/** Sound to play each time we fire */
@@ -89,20 +91,22 @@ public:
 	static const FName TurnClockwiseBinding;
 	static const FName FireBinding;
 
+	// Function that is called by shooting component to find a proper arrow to attach a weapon at 
 	UArrowComponent* GetArrowForWeapon(int32 WeaponIndex, bool bIsFirst);
 
 private:
+	// Force to apply at movement
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
 		float ShipThrottle = 30000.f;
 
+	// Rate at which ship is turning
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
 		float TurnRate = 30.f;
 
+	// Function to attempt at using super move
 	void AttemptSuper();
 
 	//Damage System Interface
-
-
 	bool bIsInvincible = false;
 
 	int32 HowMuchHPLeft = 3;

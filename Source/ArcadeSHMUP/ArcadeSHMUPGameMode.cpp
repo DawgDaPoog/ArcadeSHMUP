@@ -10,42 +10,41 @@ AArcadeSHMUPGameMode::AArcadeSHMUPGameMode()
 {
 	// set default pawn class to our character class
 	DefaultPawnClass = NULL;
+
+	// Default values for spawn frequency and wave intencity
 	SpawnFrequency = 5.f;
 	Intencity = 1;
 
+	// Default setup for first wave of enemy spawning
 	WaveSpawnSimpleMin = 2;
 	WaveSpawnSimpleMax = 4;
 
 	WaveSpawnAverageMin = 0;
 	WaveSpawnAverageMax = 0;
 
-	WaveSpawnAdvancedMin = 1;
-	WaveSpawnAdvancedMax = 2;
+	WaveSpawnAdvancedMin = 0;
+	WaveSpawnAdvancedMax = 0;
 }
 
 void AArcadeSHMUPGameMode::BeginPlay()
 {
 	//Set a wave spawn timer
 	GetWorldTimerManager().SetTimer(WaveTimerHandle, this, &AArcadeSHMUPGameMode::WaveSpawn, 5.f, true, 5.f);
-
-
-	WaveSpawnAdvancedMin = 1;
-	WaveSpawnAdvancedMax = 2;
 }
 
 void AArcadeSHMUPGameMode::AddSpawnPoint(ASpawnPoint * SpawnPointToAdd)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Adding Spawn Point"));
+	// Adding a spawn point to the array
 	SpawnPoints.Add(SpawnPointToAdd);
 }
 
 
 void AArcadeSHMUPGameMode::WaveSpawn()
 {
+	// Early return if we have no spawn points
 	if (SpawnPoints.Num() == 0) return;
 
-	// Simple Spawn
-	
+	// Spawning all enemy types	
 	SpawnWaveType(1);
 	SpawnWaveType(2);
 	SpawnWaveType(3);

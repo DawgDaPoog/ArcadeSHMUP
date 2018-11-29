@@ -16,6 +16,7 @@ class ARCADESHMUP_API ALevelBoundsVolume : public AVolume
 
 		ALevelBoundsVolume();
 
+		// Upon ending overlapping with an enemy or player, set them on the other side of the current map
 		virtual void NotifyActorEndOverlap(AActor* OtherActor) override;
 	
 };

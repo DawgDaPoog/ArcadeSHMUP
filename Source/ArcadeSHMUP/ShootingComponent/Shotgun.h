@@ -18,6 +18,7 @@ class ARCADESHMUP_API AShotgun : public AWeapon
 		virtual AProjectile* Fire() override;
 	
 public:
+	// Potential projectile spread on shot
 	float Spread = 20.f;
 	int AmountOfSpawnedProjectiles = 10;
 	

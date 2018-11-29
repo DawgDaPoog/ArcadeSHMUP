@@ -19,6 +19,7 @@ void ASpawnPoint::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	// Finding current game mode and asking to add this a spawn point to array
 	if (Cast<AArcadeSHMUPGameMode>(GetWorld()->GetAuthGameMode()))
 	{
 		Cast<AArcadeSHMUPGameMode>(GetWorld()->GetAuthGameMode())->AddSpawnPoint(this);
@@ -35,11 +36,7 @@ void ASpawnPoint::Tick(float DeltaTime)
 
 void ASpawnPoint::TrySpawn(int CategoryIndex)
 {
-	SpawnEnemyOfType(CategoryIndex);
-}
-
-bool ASpawnPoint::SpawnEnemyOfType(int CategoryIndex)
-{
+	// Creating an array and figuring out which from which enemy array we need to spawn an enemy
 	TArray<TSubclassOf<AEnemy>> EnemiesArray;
 	if (CategoryIndex == 1)
 	{
@@ -55,23 +52,27 @@ bool ASpawnPoint::SpawnEnemyOfType(int CategoryIndex)
 	}
 	else
 	{
-		return false;
+		// Early return if the index was invalid
+		return;
 	}
+
 	if (EnemiesArray.Num() == 0)
 	{
-		return false;
+		// Early return if we have nothing in the array that we have assumed
+		return;
 	}
+
+	// Taking a random index from the array to spawn
 	int SpawnIndex = FMath::RandRange(0, EnemiesArray.Num() - 1);
 
-	UE_LOG(LogTemp, Warning, TEXT("Spawned an enemy of type %i at %s"), CategoryIndex, *GetName());
-
+	// If we have an actor set, spawn it and tell it which enemy we need it to eventually spawn
 	if (SpawnerActor)
 	{
 		auto SpawnedSpawnerActor = GetWorld()->SpawnActorDeferred<ASpawnerActor>(SpawnerActor, GetActorTransform());
 		SpawnedSpawnerActor->SetDesiredSpawningActor(EnemiesArray[SpawnIndex]);
 		SpawnedSpawnerActor->FinishSpawning(GetActorTransform());
 	}
-	//GetWorld()->SpawnActor<AEnemy>(EnemiesArray[SpawnIndex], GetActorTransform());
-	return true;
 }
+
+
 

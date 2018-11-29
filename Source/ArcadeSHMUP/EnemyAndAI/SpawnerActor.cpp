@@ -18,9 +18,8 @@ void ASpawnerActor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UE_LOG(LogTemp, Warning, TEXT("Middleman Spawned. Setting Timer"));
+	// Setting a repeating timer to check for collision and spawn an enemy if we have none
 	FTimerHandle Handle;
-
 	GetWorldTimerManager().SetTimer(Handle, this, &ASpawnerActor::TrySpawnAndDestroy, 1.f, true, 1.f);
 }
 
@@ -38,22 +37,26 @@ void ASpawnerActor::SetDesiredSpawningActor(TSubclassOf<class AEnemy> Enemy)
 
 void ASpawnerActor::TrySpawnAndDestroy()
 {
+	// Getting overlapping actors
 	TSet<AActor*> OverlappingActors;
 	GetOverlappingActors(OverlappingActors);
 
+	// For every overlapping actor
 	for (auto OverlappingActor : OverlappingActors)
 	{
+		// Check if it is an enemy or a player
 		if (OverlappingActor->ActorHasTag("Player") || OverlappingActor->ActorHasTag("Enemy"))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Collision Detected. Can't spawn. Abort and repeat."));
+			// If it is an enemy, don't spawn and return
 			return;
 		}
 	}
+	// If we didn't find any overlapping with player or enemy, spawn an enemy
 	auto SpawnedEnemy = GetWorld()->SpawnActorDeferred<AEnemy>(EnemyToSpawn, GetActorTransform());
 	// TODO Set the modifiers on enemies here... When you have finished the system that is
 	SpawnedEnemy->FinishSpawning(GetActorTransform());
 
-	UE_LOG(LogTemp, Warning, TEXT("Spawned an actor. Destroying myself."));
+	// Destroying this actor to end checking for collision and spawning
 	Destroy();
 }
 

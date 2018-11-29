@@ -6,6 +6,9 @@
 #include "GameFramework/Actor.h"
 #include "SpawnerActor.generated.h"
 
+/*
+* A middleman class to spawn an enemy
+**/
 UCLASS()
 class ARCADESHMUP_API ASpawnerActor : public AActor
 {
@@ -24,10 +27,13 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	
+	// Setting the actor that needs to be spawned by this actor
 	void SetDesiredSpawningActor(TSubclassOf<class AEnemy> Enemy);
 	
 private:
+	// Class of an enemy to spawn
 	TSubclassOf<class AEnemy> EnemyToSpawn;
 
+	// Attempting to spawn an actor if there is no collision on it. If we did, destroy this actor, ending the cycle of repeating the attempt of spawning
 	void TrySpawnAndDestroy();
 };

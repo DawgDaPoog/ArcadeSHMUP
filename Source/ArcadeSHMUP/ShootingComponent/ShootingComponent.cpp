@@ -33,18 +33,20 @@ void UShootingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	// Adjusting weapon position to it's corresponding arrow
 	AdjustWeaponsPositions();
 }
 
 void UShootingComponent::OnWeaponPickup(int32 WeaponIndex)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Went in the OnPickupWeapon"));
+	//	UE_LOG(LogTemp, Warning, TEXT("Went in the OnPickupWeapon"));
 	SequencePickupWeapon(WeaponIndex);
 }
 
 void UShootingComponent::SequencePickupWeapon(const int32 &WeaponNumber)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Went in the Sequence"));
+	//	UE_LOG(LogTemp, Warning, TEXT("Went in the Sequence"));
+
 	//Figure out what kind of weapon we need to spawn or upgrade depending on a weapon number
 	TSubclassOf<AWeapon> WeaponToSpawn;
 	FName WeaponType;
@@ -106,6 +108,7 @@ void UShootingComponent::SequencePickupWeapon(const int32 &WeaponNumber)
 	}
 	else
 	{
+		// if we don't have available arrow for a given pickup, upgrade the weapons that are held by those arrows
 		for (auto WeaponArrow : WeaponsArrows)
 		{
 			if (WeaponArrow.Type == WeaponType)
@@ -118,9 +121,9 @@ void UShootingComponent::SequencePickupWeapon(const int32 &WeaponNumber)
 
 int32 UShootingComponent::CheckAmountOfSpawnedByType(FName Type)
 {
-	
-	UE_LOG(LogTemp, Warning, TEXT("Went in the CheckAmountOfSpawned"));
+	//UE_LOG(LogTemp, Warning, TEXT("Went in the CheckAmountOfSpawned"));
 
+	// Finding how much weapons of given type was already spawned
 	int32 HowManyHasAlreadyBeenSpawned = 0;
 	for (auto WeaponsArrow : WeaponsArrows)
 	{
@@ -129,13 +132,14 @@ int32 UShootingComponent::CheckAmountOfSpawnedByType(FName Type)
 			HowManyHasAlreadyBeenSpawned++;
 		}
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Finished in the CheckAmountOfSpawned"));
+	//UE_LOG(LogTemp, Warning, TEXT("Finished in the CheckAmountOfSpawned"));
 	return HowManyHasAlreadyBeenSpawned;
 
 }
 
 void UShootingComponent::AttemptShooting()
 {
+	// For all attached weapons, call shoot
 	for (auto WeaponArrow : WeaponsArrows)
 	{
 		WeaponArrow.Weapon->AttemptFire();
@@ -153,6 +157,7 @@ void UShootingComponent::AdjustWeaponsPositions()
 
 void UShootingComponent::ReactOnWeaponFire(const float KnockbackForce)
 {
+	// Adding impulse to player
 	auto ShipMeshReferense = Cast<AArcadeSHMUPPawn>(GetOwner())->GetShipMeshComponent();
 	ShipMeshReferense->AddImpulse(-ShipMeshReferense->GetForwardVector()*KnockbackForce);
 }

@@ -29,9 +29,16 @@ void AWeapon::BeginPlay()
 
 AProjectile* AWeapon::Fire()
 {
+	// Setting location to spawn at
 	FVector Location = GetActorLocation() + GetActorForwardVector()*4.f;
+
+	// Setting Z location at 250.f (Gameplay plane)
 	Location.Z = 250.f;
+	
+	// Spwn transform
 	FTransform SpawnLocation = FTransform(GetActorRotation(), Location, FVector(1.f));
+
+	// Spawning and setting damage to projectile
 	auto SpawnedProjectile = GetWorld()->SpawnActorDeferred<AProjectile>(Projectile, SpawnLocation);
 	SpawnedProjectile->SetDamage(Damage);
 	SpawnedProjectile->FinishSpawning(SpawnLocation);
@@ -47,6 +54,7 @@ void AWeapon::Tick(float DeltaTime)
 }
 void AWeapon::AttemptFire()
 {
+	// Firing and start reloading, if not reloading
 	if (!bIsReloading) {
 		Fire();
 		SetReloadTimer();
