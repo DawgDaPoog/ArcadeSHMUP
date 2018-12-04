@@ -23,6 +23,7 @@ void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	SetLifeSpan(3.f);
 }
 
 void AProjectile::NotifyActorBeginOverlap(AActor * OtherActor)

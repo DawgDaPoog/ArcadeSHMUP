@@ -4,13 +4,29 @@
 #include "ArcadeSHMUPPawn.h"
 #include "EnemyAndAI/SpawnPoint.h"
 #include "TimerManager.h"
-
+#include "Kismet/GameplayStatics.h"
+#include "EnemyAndAI/Enemy.h"
+#include "Engine/World.h"
+#include "GameFramework/PlayerStart.h"
+#include "ConstructorHelpers.h"
+#include "ArcadeSHMUPPawn.h"
+#include "GameFramework/PlayerController.h"
 
 AArcadeSHMUPGameMode::AArcadeSHMUPGameMode()
 {
 	// set default pawn class to our character class
 	DefaultPawnClass = NULL;
 
+	static ConstructorHelpers::FClassFinder<AArcadeSHMUPPawn> PlayerFinder(TEXT("/Game/PlayerAndPlayerLogic/BP_ArcadeSHMUPPawn"));
+
+	if (PlayerFinder.Succeeded())
+	{
+		Player = PlayerFinder.Class;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Gameplay couldn't find Player Class!"));
+	}
 	// Default values for spawn frequency and wave intencity
 	SpawnFrequency = 5.f;
 	Intencity = 1;
@@ -28,6 +44,22 @@ AArcadeSHMUPGameMode::AArcadeSHMUPGameMode()
 
 void AArcadeSHMUPGameMode::BeginPlay()
 {
+	Super::BeginPlay();
+	// Create or Load a save file
+
+	GameSave = Cast<UScoreSystemSaveGame>(UGameplayStatics::CreateSaveGameObject(UScoreSystemSaveGame::StaticClass()));
+	if (UGameplayStatics::DoesSaveGameExist(TEXT("0"), 0))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Loaded Game"))
+		GameSave = Cast<UScoreSystemSaveGame>(UGameplayStatics::LoadGameFromSlot(TEXT("0"), 0));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Saved New Game"))
+		UGameplayStatics::SaveGameToSlot(GameSave, TEXT("0"), 0);
+		GameSave = Cast<UScoreSystemSaveGame>(UGameplayStatics::LoadGameFromSlot(TEXT("0"), 0));
+	}
+
 	//Set a wave spawn timer
 	GetWorldTimerManager().SetTimer(WaveTimerHandle, this, &AArcadeSHMUPGameMode::WaveSpawn, 5.f, true, 5.f);
 }
@@ -38,6 +70,120 @@ void AArcadeSHMUPGameMode::AddSpawnPoint(ASpawnPoint * SpawnPointToAdd)
 	SpawnPoints.Add(SpawnPointToAdd);
 }
 
+void AArcadeSHMUPGameMode::StartNewGameCycle(FString SaveFileName)
+{
+	FNameToScore NewNameScore;
+	NewNameScore.Score = 0;
+	NewNameScore.Name = SaveFileName;
+
+	CurrentName = SaveFileName;
+
+	// Adding new ScoreName to the game save
+	if (GameSave)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Added new NameScore"))
+		GameSave->NamesAndScores.Add(NewNameScore);
+	}
+
+	for (auto NameScores : GameSave->NamesAndScores)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Name %s"), *NameScores.Name);
+			UE_LOG(LogTemp, Warning, TEXT("Score Amount %i"), NameScores.Score);
+	}
+
+	//Finding the player start
+	TArray<AActor*> FoundActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), FoundActors);
+
+
+	if (FoundActors.Num() == 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No Player Start In the game was found"));
+		return;
+	}
+
+	APlayerStart* PlayerStart = Cast<APlayerStart>(FoundActors.Last());
+	UE_LOG(LogTemp, Warning, TEXT("Setting Player Start"));
+	// Spawning the player at player start
+	if (PlayerStart)
+	{
+		auto PlayerActor = GetWorld()->SpawnActor<AArcadeSHMUPPawn>(Player, PlayerStart->GetActorLocation(), PlayerStart->GetActorRotation());
+
+		GetWorld()->GetFirstPlayerController()->SetInputMode(FInputModeGameOnly());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No Player Start"));
+	}
+}
+
+void AArcadeSHMUPGameMode::EndGameCycle()
+{
+	GameSave->NamesAndScores.Last().Name = CurrentName;
+	GameSave->NamesAndScores.Last().Score = CurrentScore;
+	if (GameSave)
+	{
+		UE_LOG(LogTemp,Warning,TEXT("Saved Game"))
+		UGameplayStatics::SaveGameToSlot(GameSave, TEXT("0"), 0);
+		GameSave = Cast<UScoreSystemSaveGame>(UGameplayStatics::LoadGameFromSlot(TEXT("0"), 0));
+	}
+}
+
+int AArcadeSHMUPGameMode::GetGameCurrentScore()
+{
+	return CurrentScore;
+}
+
+FString AArcadeSHMUPGameMode::GetGameCurrentName()
+{
+	return CurrentName;
+}
+
+TArray<FString> AArcadeSHMUPGameMode::GetNamesArray()
+{
+	if (GameSave->NamesAndScores.Num() != 0)
+	{
+		TArray<FString> retVal;
+		for (auto NameScore : GameSave->NamesAndScores)
+		{
+			retVal.Add(NameScore.Name);
+		}
+		return retVal;
+	}
+	return TArray<FString>();
+}
+
+TArray<int32> AArcadeSHMUPGameMode::GetScoresArray()
+{
+	if (GameSave->NamesAndScores.Num() != 0)
+	{
+		TArray<int32> retVal;
+		for (auto NameScore : GameSave->NamesAndScores)
+		{
+			retVal.Add(NameScore.Score);
+		}
+		return retVal;
+	}
+	return TArray<int32>();
+}
+
+bool AArcadeSHMUPGameMode::IsSaveDataNotEmpty()
+{
+	if (GameSave->NamesAndScores.Num() != 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Save Data Is Not Empty"))
+		return true;
+	}
+	UE_LOG(LogTemp, Warning, TEXT("Saved Data Is EMpty"))
+	return false;
+}
+
+
+void AArcadeSHMUPGameMode::ReactToEnemyDeath(int PointsAwarded)
+{
+	// Increrase the score of the player by the cost of the enemy that died
+	CurrentScore += PointsAwarded;
+}
 
 void AArcadeSHMUPGameMode::WaveSpawn()
 {
@@ -48,6 +194,9 @@ void AArcadeSHMUPGameMode::WaveSpawn()
 	SpawnWaveType(1);
 	SpawnWaveType(2);
 	SpawnWaveType(3);
+
+	// Increasing Intensity Level
+
 }
 
 void AArcadeSHMUPGameMode::SpawnWaveType(int WaveIndex)

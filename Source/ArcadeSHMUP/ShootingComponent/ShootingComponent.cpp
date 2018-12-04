@@ -52,7 +52,6 @@ void UShootingComponent::SequencePickupWeapon(const int32 &WeaponNumber)
 	FName WeaponType;
 	if (WeaponNumber == 0)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Went in the Shotgun"));
 		WeaponToSpawn = Shotgun;
 		WeaponType = FName("Shotgun");
 	}
@@ -143,6 +142,14 @@ void UShootingComponent::AttemptShooting()
 	for (auto WeaponArrow : WeaponsArrows)
 	{
 		WeaponArrow.Weapon->AttemptFire();
+	}
+}
+
+void UShootingComponent::DestroyAllWeapons()
+{
+	for (auto WeaponsArrow : WeaponsArrows)
+	{
+		WeaponsArrow.Weapon->Destroy();
 	}
 }
 

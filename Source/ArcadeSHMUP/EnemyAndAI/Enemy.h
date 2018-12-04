@@ -6,6 +6,8 @@
 #include "GameFramework/Pawn.h"
 #include "Enemy.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FEnemyDelegate, const int, Score, AEnemy*, EnemyReference);
+
 UCLASS()
 class ARCADESHMUP_API AEnemy : public APawn
 {
@@ -22,6 +24,9 @@ protected:
 	UPROPERTY(Category = Mesh, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		class UStaticMeshComponent* Mesh;
 
+	UPROPERTY(Category = ParticleEffects, EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		class UParticleSystem* ParticlesOnDeath;
+
 	virtual void NotifyHit(UPrimitiveComponent * MyComp, AActor * Other, UPrimitiveComponent * OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult & Hit) override;
 
 	virtual void NotifyActorBeginOverlap(AActor * OtherActor) override;
@@ -30,7 +35,12 @@ protected:
 
 	float HitPoints = 0.f;
 
+	int PointsAwardedOnKill = 0;
+
 	virtual void SequenceDestroy();
+
+	
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -39,4 +49,8 @@ public:
 		class UBehaviorTree* BehaviorTree;
 	
 	void TakeDamage(float Damage);
+
+	FEnemyDelegate OnDeath;
+
+	
 };

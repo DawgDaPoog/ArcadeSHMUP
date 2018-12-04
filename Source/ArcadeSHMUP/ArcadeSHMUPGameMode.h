@@ -4,13 +4,54 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "ScoreSystemSaveGame.h"
 #include "ArcadeSHMUPGameMode.generated.h"
+
 
 UCLASS(MinimalAPI)
 class AArcadeSHMUPGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 
+public:
+	AArcadeSHMUPGameMode();
+
+	virtual void BeginPlay() override;
+
+	// Called on SpawnPoint's begin play, asking to add itself onto the SpawnPoints array
+	void AddSpawnPoint(class ASpawnPoint* SpawnPointToAdd);
+
+	// Calling when the game starts, initiates all the needed save game information and spawns the player
+	UFUNCTION(BlueprintCallable, Category = "Gameflow")
+		void StartNewGameCycle(FString SaveFileName);
+
+	// Called when the player has died. Saves his score.
+	UFUNCTION(BlueprintCallable, Category = "Gameflow")
+	void EndGameCycle();
+
+	// Get the score of the current save file
+	UFUNCTION(BlueprintPure, Category = "GameSave")
+	int GetGameCurrentScore();
+
+	// Get the name of the current save file
+	UFUNCTION(BlueprintPure, Category = "GameSave")
+		FString GetGameCurrentName();
+
+	// Get the array of names
+	UFUNCTION(BlueprintPure, Category = "GameSave")
+	TArray<FString> GetNamesArray();
+
+	// Get the array of scores
+	UFUNCTION(BlueprintPure, Category = "GameSave")
+	TArray<int32> GetScoresArray();
+
+	//Get if we have anything in our game save or not
+	UFUNCTION(BlueprintPure, Category = "GameSave")
+	bool IsSaveDataNotEmpty();
+
+	// Reacting when enemy broadcasts that it had died
+	UFUNCTION()
+	void ReactToEnemyDeath(int PointsAwarded);
 private:
 	// Spawn points that are to be used to spawn new enemies
 	TArray<class ASpawnPoint*> SpawnPoints;
@@ -45,15 +86,19 @@ private:
 
 	// Timer to handle repeated spawning
 	FTimerHandle WaveTimerHandle;
-public:
-	AArcadeSHMUPGameMode();
 
-	virtual void BeginPlay() override;
+	// Score system game save reference
+	class UScoreSystemSaveGame* GameSave;
 
-	// Called on SpawnPoint's begin play, asking to add itself onto the SpawnPoints array
-	void AddSpawnPoint(class ASpawnPoint* SpawnPointToAdd);
+	// Array of enemies that are spawned on the field
+	TArray<class AEnemy*> EnemiesOnField;
 
-	
+	TSubclassOf<class AArcadeSHMUPPawn> Player;
+
+	int32 CurrentScore = 0;
+
+	FString CurrentName = "";
+
 };
 
 

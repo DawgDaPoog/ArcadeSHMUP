@@ -13,6 +13,9 @@ ADebree::ADebree()
 
 	HitPoints = 40.f;
 
+	PointsAwardedOnKill = 20;
+
+	Mesh->SetPhysicsMaxAngularVelocity(10.f);
 }
 
 // Called when the game starts or when spawned
@@ -21,7 +24,7 @@ void ADebree::BeginPlay()
 	Super::BeginPlay();
 	
 	Mesh->SetPhysicsLinearVelocity(FMath::VRand().GetSafeNormal()*500.f);
-	Mesh->SetPhysicsAngularVelocity(FMath::VRand().GetSafeNormal()*FMath::RandRange(0.f,100.f));
+	Mesh->SetPhysicsAngularVelocityInDegrees(FMath::VRand().GetSafeNormal()*FMath::RandRange(0.f,10.f));
 }
 
 void ADebree::SequenceDestroy()
@@ -34,6 +37,7 @@ void ADebree::SequenceDestroy()
 			ADebree* DebreeActor = GetWorld()->SpawnActorDeferred<ADebree>(Debree, DebreeTransform);
 			DebreeActor->HitPoints = HitPoints / 3;
 			DebreeActor->bIsSecondarySpawn = true;
+			//DebreeActor->NotifyGameModeOfEnemySpawned();
 			DebreeActor->FinishSpawning(DebreeTransform);
 		}
 	}

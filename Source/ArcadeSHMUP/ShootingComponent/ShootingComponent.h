@@ -34,6 +34,7 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
+
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
@@ -64,6 +65,9 @@ public:
 	
 	// Called by player to attempt shooting all attached weapons
 	void AttemptShooting();
+
+	// Function to destroy all attached weapons upon dying
+	void DestroyAllWeapons();
 private:
 	// Adjusting weapons positions to it's corresponding arrows
 	void AdjustWeaponsPositions();
@@ -74,4 +78,5 @@ private:
 	
 	// Array of struct that corresponds weapons to it's arrows
 	TArray<FWeaponArrowReference> WeaponsArrows;
+
 };
