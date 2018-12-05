@@ -61,8 +61,7 @@ void AEnemy::ReactToPlayer(AArcadeSHMUPPawn * Player)
 void AEnemy::SequenceDestroy()
 {
 	// Broadcast destruction to gamemode
-	//OnDeath.Broadcast(PointsAwardedOnKill, this);
-	Cast<AArcadeSHMUPGameMode>(GetWorld()->GetAuthGameMode())->ReactToEnemyDeath(PointsAwardedOnKill);
+	Cast<AArcadeSHMUPGameMode>(GetWorld()->GetAuthGameMode())->ReactToEnemyDeath(PointsAwardedOnKill, GetActorLocation(), WeaponDropPriority, ModificationDropPriority);
 
 	if (ParticlesOnDeath)
 	{

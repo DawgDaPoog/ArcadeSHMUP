@@ -12,6 +12,7 @@
 #include "ConstructorHelpers.h"
 #include "ArcadeSHMUPPawn.h"
 #include "GameFramework/PlayerController.h"
+#include "Drops/DropManager.h"
 
 AArcadeSHMUPGameMode::AArcadeSHMUPGameMode()
 {
@@ -24,10 +25,7 @@ AArcadeSHMUPGameMode::AArcadeSHMUPGameMode()
 	{
 		Player = PlayerFinder.Class;
 	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Gameplay couldn't find Player Class!"));
-	}
+
 	// Default values for spawn frequency and wave intencity
 	SpawnFrequency = 5.f;
 	Intencity = 1;
@@ -48,23 +46,45 @@ void AArcadeSHMUPGameMode::BeginPlay()
 	Super::BeginPlay();
 	// Create or Load a save file
 
+	// Create GameSave variable
 	GameSave = Cast<UScoreSystemSaveGame>(UGameplayStatics::CreateSaveGameObject(UScoreSystemSaveGame::StaticClass()));
+
+	// Check if game save already exists
 	if (UGameplayStatics::DoesSaveGameExist(TEXT("0"), 0))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Loaded Game"))
-		GameSave = Cast<UScoreSystemSaveGame>(UGameplayStatics::LoadGameFromSlot(TEXT("0"), 0));
+		// Load GameSave
+		LoadGameSave();
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Saved New Game"))
-		UGameplayStatics::SaveGameToSlot(GameSave, TEXT("0"), 0);
-		GameSave = Cast<UScoreSystemSaveGame>(UGameplayStatics::LoadGameFromSlot(TEXT("0"), 0));
+		// Create New Game Save
+		SaveGame();
+		LoadGameSave();
 	}
 
+	// Finding Drop Manager in the level
+	TArray<AActor*> FoundActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ADropManager::StaticClass(), FoundActors);
+
+	// Setting our DropManager to the last found 
+	DropManager = Cast<ADropManager>(FoundActors.Last());
+	check(DropManager);
+
+	// Sort scores in the save file
 	GameSave->SortScores();
 
 	//Set a wave spawn timer
 	GetWorldTimerManager().SetTimer(WaveTimerHandle, this, &AArcadeSHMUPGameMode::WaveSpawn, 5.f, true, 5.f);
+}
+
+void AArcadeSHMUPGameMode::SaveGame()
+{
+	UGameplayStatics::SaveGameToSlot(GameSave, TEXT("0"), 0);
+}
+
+void AArcadeSHMUPGameMode::LoadGameSave()
+{
+	GameSave = Cast<UScoreSystemSaveGame>(UGameplayStatics::LoadGameFromSlot(TEXT("0"), 0));
 }
 
 void AArcadeSHMUPGameMode::AddSpawnPoint(ASpawnPoint * SpawnPointToAdd)
@@ -75,27 +95,13 @@ void AArcadeSHMUPGameMode::AddSpawnPoint(ASpawnPoint * SpawnPointToAdd)
 
 void AArcadeSHMUPGameMode::StartNewGameCycle(FString SaveFileName)
 {
-	FNameToScore NewNameScore;
-	NewNameScore.Score = 0;
-	NewNameScore.Name = SaveFileName;
-
+	// Reseting the score and setting new name
+	CurrentScore = 0;
 	CurrentName = SaveFileName;
 
-	// Adding new ScoreName to the game save
-	if (GameSave)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Added new NameScore"))
-		GameSave->NamesAndScores.Add(NewNameScore);
-	}
-
-	for (auto NameScores : GameSave->NamesAndScores)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Name %s"), *NameScores.Name);
-			UE_LOG(LogTemp, Warning, TEXT("Score Amount %i"), NameScores.Score);
-	}
-
-	
+	// Array to help find actors in level 
 	TArray<AActor*> FoundActors;
+
 	// Finding All Enemies in level
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemy::StaticClass(), FoundActors);
 
@@ -116,40 +122,35 @@ void AArcadeSHMUPGameMode::StartNewGameCycle(FString SaveFileName)
 
 	//Finding the player start
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), FoundActors);
-
-	// Returning if we didn't find any player start points
-	if (FoundActors.Num() == 0)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("No Player Start In the game was found"));
-		return;
-	}
-
 	APlayerStart* PlayerStart = Cast<APlayerStart>(FoundActors.Last());
-	UE_LOG(LogTemp, Warning, TEXT("Setting Player Start"));
-	// Spawning the player at player start
-	if (PlayerStart)
-	{
-		auto PlayerActor = GetWorld()->SpawnActor<AArcadeSHMUPPawn>(Player, PlayerStart->GetActorLocation(), PlayerStart->GetActorRotation());
 
-		GetWorld()->GetFirstPlayerController()->SetInputMode(FInputModeGameOnly());
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("No Player Start"));
-	}
+	// Spawning the player at player start
+	check(PlayerStart)
+	auto PlayerActor = GetWorld()->SpawnActor<AArcadeSHMUPPawn>(Player, PlayerStart->GetActorLocation(), PlayerStart->GetActorRotation());
+	GetWorld()->GetFirstPlayerController()->SetInputMode(FInputModeGameOnly());
+	
+	
 }
 
 void AArcadeSHMUPGameMode::EndGameCycle()
-{	
-	GameSave = Cast<UScoreSystemSaveGame>(UGameplayStatics::LoadGameFromSlot(TEXT("0"), 0));
+{
+	// Creating new FNameToScore struct to then push in the save file
+	FNameToScore NewNameScore;
+	NewNameScore.Score = CurrentScore;
+	NewNameScore.Name = CurrentName;
+
+	// Load Game Save
+	LoadGameSave();
+
 	if (GameSave)
 	{
-		GameSave->NamesAndScores.Last().Name = CurrentName;
-		GameSave->NamesAndScores.Last().Score = CurrentScore;
+		// Adding new ScoreName to the game save and sorting
+		GameSave->NamesAndScores.Add(NewNameScore);
 		GameSave->SortScores();
-		UE_LOG(LogTemp,Warning,TEXT("Saved Game"))
-		UGameplayStatics::SaveGameToSlot(GameSave, TEXT("0"), 0);
-		GameSave = Cast<UScoreSystemSaveGame>(UGameplayStatics::LoadGameFromSlot(TEXT("0"), 0));
+		
+		// Reload Game Save
+		SaveGame();
+		LoadGameSave();
 	}
 }
 
@@ -195,18 +196,41 @@ bool AArcadeSHMUPGameMode::IsSaveDataNotEmpty()
 {
 	if (GameSave->NamesAndScores.Num() != 0)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Save Data Is Not Empty"))
 		return true;
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Saved Data Is EMpty"))
 	return false;
 }
 
 
-void AArcadeSHMUPGameMode::ReactToEnemyDeath(int PointsAwarded)
+void AArcadeSHMUPGameMode::ReactToEnemyDeath(int PointsAwarded, FVector DeathLocation, int WeaponDropPriority, int ModificationDropPriority)
 {
 	// Increrase the score of the player by the cost of the enemy that died
 	CurrentScore += PointsAwarded;
+
+	// Chance to drop a weapon on it's death location, depenging on the type of an enemy
+	int TempDropChance = 0; 
+	switch (WeaponDropPriority)
+	{
+	case 0:
+		break;
+	case 1:
+		TempDropChance = SimpleEnemyWeaponDropChance;
+		break;
+	case 2:
+		TempDropChance = AverageEnemyWeaponDropChance;
+		break;
+	case 3:
+		TempDropChance = AdvancedEnemyWeaponDropChance;
+		break;
+	case 4:
+		TempDropChance = 100;
+	}
+
+	if (FMath::RandRange(1, 100) <= TempDropChance)
+	{
+		DropManager->InitializeRandomDropAtLocation(DeathLocation);
+	}
+	// Chance to drop modification on it's death location, depending on the type of an enemy
 }
 
 void AArcadeSHMUPGameMode::WaveSpawn()

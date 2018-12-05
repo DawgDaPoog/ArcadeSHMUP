@@ -15,6 +15,8 @@ ADebree::ADebree()
 
 	PointsAwardedOnKill = 20;
 
+	WeaponDropPriority = 1;
+
 	Mesh->SetPhysicsMaxAngularVelocity(10.f);
 }
 

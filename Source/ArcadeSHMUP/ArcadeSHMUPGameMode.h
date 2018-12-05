@@ -16,6 +16,7 @@ class AArcadeSHMUPGameMode : public AGameModeBase
 public:
 	AArcadeSHMUPGameMode();
 
+	// Initialize game save, get all the needed info and load all needed files
 	virtual void BeginPlay() override;
 
 	// Called on SpawnPoint's begin play, asking to add itself onto the SpawnPoints array
@@ -51,10 +52,19 @@ public:
 
 	// Reacting when enemy broadcasts that it had died
 	UFUNCTION()
-	void ReactToEnemyDeath(int PointsAwarded);
+	void ReactToEnemyDeath(int PointsAwarded, FVector DeathLocation, int WeaponDropPriority, int ModificationDropPriority);
 private:
+	// Saves a game to save slot 0
+	void SaveGame();
+
+	// Loads a game from a slot 0
+	void LoadGameSave();
+
 	// Spawn points that are to be used to spawn new enemies
 	TArray<class ASpawnPoint*> SpawnPoints;
+
+	// Drop Manager for Drop spawning
+	class ADropManager* DropManager;
 
 	// How frequently enemies will spawn
 	float SpawnFrequency;
@@ -71,7 +81,12 @@ private:
 	int WaveSpawnAdvancedMin;
 	int WaveSpawnAdvancedMax;
 
-	// Intencity level that decides the amounts of 
+	// Variables to calculate chances of dropping modification/weapon
+	int SimpleEnemyWeaponDropChance = 2;
+	int AverageEnemyWeaponDropChance = 10;
+	int AdvancedEnemyWeaponDropChance = 20;
+
+	// Intencity level that decides the amounts of spawns and their types
 	int Intencity;
 
 	// Spawning a wave of enemies (Telling the spawn points to attempt spawning)
@@ -93,10 +108,13 @@ private:
 	// Array of enemies that are spawned on the field
 	TArray<class AEnemy*> EnemiesOnField;
 
+	// Player class to spawn when we start playing
 	TSubclassOf<class AArcadeSHMUPPawn> Player;
 
+	// Score of a current session
 	int32 CurrentScore = 0;
 
+	// Name of a current sesion
 	FString CurrentName = "";
 
 };

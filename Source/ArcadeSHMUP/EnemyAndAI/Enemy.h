@@ -21,26 +21,44 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	// Mesh
 	UPROPERTY(Category = Mesh, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		class UStaticMeshComponent* Mesh;
 
+	// Particles
 	UPROPERTY(Category = ParticleEffects, EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		class UParticleSystem* ParticlesOnDeath;
 
+	// Checking if we hit a player. If we did, react with ReactToPlayer
 	virtual void NotifyHit(UPrimitiveComponent * MyComp, AActor * Other, UPrimitiveComponent * OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult & Hit) override;
 
+	// Same as Hit, but if overlapping
 	virtual void NotifyActorBeginOverlap(AActor * OtherActor) override;
 
+	// Reacting to player that got hit. Usually just deal damage
 	virtual void ReactToPlayer(class AArcadeSHMUPPawn* Player);
 
+	// Enemy health
 	float HitPoints = 0.f;
 
+	// How much points do you get when killing this enemy
 	int PointsAwardedOnKill = 0;
 
-	virtual void SequenceDestroy();
-
+	/* 
+	* Priority of dropping a weapon upon death  
+	* 0 - Neven drops a weapon,
+	* 1 - Simple Enemy, 2% regular chance to drop
+	* 2 - Average Enemy, 10% regular chance to drop
+	* 3 - Advanced Enemy, 20% regular chance to drop
+	* 4 - Special Enemy, Always drops
+	**/
+	int WeaponDropPriority = 0;
 	
+	//* Priority of dropping a modification upon death  (Under development)
+	int ModificationDropPriority = 0;
 
+	// Sequence for destroying the enemy
+	virtual void SequenceDestroy();
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
