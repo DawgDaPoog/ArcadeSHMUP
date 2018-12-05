@@ -2,6 +2,11 @@
 
 #include "ScoreSystemSaveGame.h"
 
-
-
-
+void UScoreSystemSaveGame::SortScores()
+{
+	if (NamesAndScores.Num() != 0)
+	{
+		// Sorting the array
+		NamesAndScores.Sort();
+	}
+}

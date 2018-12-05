@@ -6,7 +6,6 @@
 #include "TimerManager.h"
 #include "Kismet/GameplayStatics.h"
 #include "EnemyAndAI/Enemy.h"
-#include "EnemyAndAI/SpawnerActor.h"
 #include "Engine/World.h"
 #include "GameFramework/PlayerStart.h"
 #include "ConstructorHelpers.h"
@@ -61,8 +60,6 @@ void AArcadeSHMUPGameMode::BeginPlay()
 		GameSave = Cast<UScoreSystemSaveGame>(UGameplayStatics::LoadGameFromSlot(TEXT("0"), 0));
 	}
 
-	GameSave->SortScores();
-
 	//Set a wave spawn timer
 	GetWorldTimerManager().SetTimer(WaveTimerHandle, this, &AArcadeSHMUPGameMode::WaveSpawn, 5.f, true, 5.f);
 }
@@ -94,30 +91,11 @@ void AArcadeSHMUPGameMode::StartNewGameCycle(FString SaveFileName)
 			UE_LOG(LogTemp, Warning, TEXT("Score Amount %i"), NameScores.Score);
 	}
 
-	
-	TArray<AActor*> FoundActors;
-	// Finding All Enemies in level
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemy::StaticClass(), FoundActors);
-
-	// Destroying Every Single one of Enemies
-	for (auto Enemy : FoundActors)
-	{
-		Enemy->Destroy();
-	}
-
-	// Find all the lingering SpawnerActor's
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASpawnerActor::StaticClass(), FoundActors);
-
-	// Destroying them
-	for (auto SpawnerActor : FoundActors)
-	{
-		SpawnerActor->Destroy();
-	}
-
 	//Finding the player start
+	TArray<AActor*> FoundActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), FoundActors);
 
-	// Returning if we didn't find any player start points
+
 	if (FoundActors.Num() == 0)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("No Player Start In the game was found"));
@@ -140,13 +118,11 @@ void AArcadeSHMUPGameMode::StartNewGameCycle(FString SaveFileName)
 }
 
 void AArcadeSHMUPGameMode::EndGameCycle()
-{	
-	GameSave = Cast<UScoreSystemSaveGame>(UGameplayStatics::LoadGameFromSlot(TEXT("0"), 0));
+{
+	GameSave->NamesAndScores.Last().Name = CurrentName;
+	GameSave->NamesAndScores.Last().Score = CurrentScore;
 	if (GameSave)
 	{
-		GameSave->NamesAndScores.Last().Name = CurrentName;
-		GameSave->NamesAndScores.Last().Score = CurrentScore;
-		GameSave->SortScores();
 		UE_LOG(LogTemp,Warning,TEXT("Saved Game"))
 		UGameplayStatics::SaveGameToSlot(GameSave, TEXT("0"), 0);
 		GameSave = Cast<UScoreSystemSaveGame>(UGameplayStatics::LoadGameFromSlot(TEXT("0"), 0));

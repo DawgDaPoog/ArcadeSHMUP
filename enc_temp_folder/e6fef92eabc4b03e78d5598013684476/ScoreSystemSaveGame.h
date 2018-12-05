@@ -23,12 +23,6 @@ struct FNameToScore
 	int32 GetScore() { return Score; }
 
 	FString GetName() { return Name; }
-
-	// Overloading < operator so that we can properely sort array of this struct. Sorting from the highest to the smallest
-	FORCEINLINE bool operator<(const FNameToScore &Other) const
-	{
-		return Score > Other.Score;
-	}
 };
 
 /**
@@ -43,6 +37,4 @@ public:
 	// Array of Name to Score relations to save in the save file
 	UPROPERTY(VisibleAnywhere, Category = NamesAndScores)
 	TArray<FNameToScore> NamesAndScores;
-
-	void SortScores();
 };
