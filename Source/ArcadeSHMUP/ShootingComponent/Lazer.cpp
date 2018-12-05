@@ -6,9 +6,9 @@
 
 ALazer::ALazer()
 {
-	RateOfFire = 0.01f;
+	RateOfFire = 1.f/60.f;
 	KnockbackForce = 400.f;
-	Damage = 0.07f;
+	Damage = 0.4f;
 }
 
 AProjectile* ALazer::Fire()

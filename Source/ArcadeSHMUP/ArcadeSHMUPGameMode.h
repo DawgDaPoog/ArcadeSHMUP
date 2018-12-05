@@ -53,6 +53,9 @@ public:
 	// Reacting when enemy broadcasts that it had died
 	UFUNCTION()
 	void ReactToEnemyDeath(int PointsAwarded, FVector DeathLocation, int WeaponDropPriority, int ModificationDropPriority);
+
+	// Sending Player a message to show on screen during playing
+	void SendPlayerAMessage(FString& Message);
 private:
 	// Saves a game to save slot 0
 	void SaveGame();
@@ -116,6 +119,9 @@ private:
 
 	// Name of a current sesion
 	FString CurrentName = "";
+
+	// Player actor reference
+	class AArcadeSHMUPPawn* CurrentPlayerActor;
 
 };
 

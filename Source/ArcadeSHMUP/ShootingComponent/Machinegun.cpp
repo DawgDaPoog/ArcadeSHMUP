@@ -9,7 +9,7 @@ AMachinegun::AMachinegun()
 {
 	RateOfFire = 0.1f;
 	KnockbackForce = 4500.f;
-	Damage = 1.f;
+	Damage = 3.f;
 }
 
 AProjectile* AMachinegun::Fire()

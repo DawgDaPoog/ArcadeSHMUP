@@ -135,13 +135,12 @@ void AArcadeSHMUPPawn::BeginPlay()
 
 	if (ShootingComponent)
 	{
-		ShootingComponent->OnWeaponPickup(0);
-		ShootingComponent->OnWeaponPickup(1);
-		ShootingComponent->OnWeaponPickup(2);
-		ShootingComponent->OnWeaponPickup(3);
-		ShootingComponent->OnWeaponPickup(4);
-		ShootingComponent->OnWeaponPickup(5);
-
+		int RandWeaponIndex = FMath::RandRange(0, 2);
+		if (RandWeaponIndex == 2)
+		{
+			RandWeaponIndex = 3;
+		}
+		ShootingComponent->OnWeaponPickup(RandWeaponIndex);
 	}
 }
 
@@ -224,6 +223,8 @@ UArrowComponent* AArcadeSHMUPPawn::GetArrowForWeapon(int32 WeaponIndex, bool bIs
 	}
 	return ArrowForShotgun1;
 }
+
+
 
 void AArcadeSHMUPPawn::AttemptSuper()
 {

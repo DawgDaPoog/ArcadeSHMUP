@@ -94,6 +94,8 @@ public:
 	// Function that is called by shooting component to find a proper arrow to attach a weapon at 
 	UArrowComponent* GetArrowForWeapon(int32 WeaponIndex, bool bIsFirst);
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void AddMessageOnScreen(const FString& ToAdd);
 private:
 	// Force to apply at movement
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
@@ -110,6 +112,8 @@ private:
 	bool bIsInvincible = false;
 
 	int32 HowMuchHPLeft = 3;
+
+	
 public:
 	/** Returns ShipMeshComponent subobject **/
 	FORCEINLINE class UStaticMeshComponent* GetShipMeshComponent() const { return ShipMeshComponent; }

@@ -23,6 +23,7 @@ AArcadeSHMUPGameMode::AArcadeSHMUPGameMode()
 
 	if (PlayerFinder.Succeeded())
 	{
+		UE_LOG(LogTemp,Warning, TEXT(" Succeeded to find class"))
 		Player = PlayerFinder.Class;
 	}
 
@@ -126,7 +127,7 @@ void AArcadeSHMUPGameMode::StartNewGameCycle(FString SaveFileName)
 
 	// Spawning the player at player start
 	check(PlayerStart)
-	auto PlayerActor = GetWorld()->SpawnActor<AArcadeSHMUPPawn>(Player, PlayerStart->GetActorLocation(), PlayerStart->GetActorRotation());
+	CurrentPlayerActor = GetWorld()->SpawnActor<AArcadeSHMUPPawn>(Player, PlayerStart->GetActorLocation(), PlayerStart->GetActorRotation());
 	GetWorld()->GetFirstPlayerController()->SetInputMode(FInputModeGameOnly());
 	
 	
@@ -231,6 +232,14 @@ void AArcadeSHMUPGameMode::ReactToEnemyDeath(int PointsAwarded, FVector DeathLoc
 		DropManager->InitializeRandomDropAtLocation(DeathLocation);
 	}
 	// Chance to drop modification on it's death location, depending on the type of an enemy
+}
+
+void AArcadeSHMUPGameMode::SendPlayerAMessage(FString& Message)
+{
+	if (CurrentPlayerActor)
+	{
+		CurrentPlayerActor->AddMessageOnScreen(Message);
+	}
 }
 
 void AArcadeSHMUPGameMode::WaveSpawn()

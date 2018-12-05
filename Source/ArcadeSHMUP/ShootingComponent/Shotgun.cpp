@@ -8,7 +8,7 @@ AShotgun::AShotgun()
 {
 	RateOfFire = 1.f;
 	KnockbackForce = 20000.f;
-	Damage = 5.f;
+	Damage = 3.7f;
 }
 
 AProjectile* AShotgun::Fire()

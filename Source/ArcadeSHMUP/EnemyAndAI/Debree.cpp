@@ -51,7 +51,7 @@ void ADebree::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	float SpeedLimit = 500.f;
+	static const float SpeedLimit = 500.f;
 	if (GetVelocity().Size() > SpeedLimit)
 	{
 		Mesh->SetPhysicsLinearVelocity(GetVelocity().GetSafeNormal()*SpeedLimit);
