@@ -6,6 +6,7 @@
 
 void AMachinegunDrop::NotifyPlayerPickedUp(AArcadeSHMUPPawn * Player)
 {
+	MessageToForward = FString("You picked up a Machinegun!");
 	Player->GetShootingComponent()->OnWeaponPickup(1);
 	Super::NotifyPlayerPickedUp(Player);
 }

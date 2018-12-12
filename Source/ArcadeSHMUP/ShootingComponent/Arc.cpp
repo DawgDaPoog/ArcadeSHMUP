@@ -6,9 +6,9 @@
 #include "ProjectilesTypes/ArcProjectile.h"
 AArc::AArc()
 {
-	RateOfFire = 0.01f;
+	RateOfFire = 1.f/60.f;
 	KnockbackForce = 100.f;
-	Damage = 0.03f;
+	Damage = 0.25f;
 }
 
 

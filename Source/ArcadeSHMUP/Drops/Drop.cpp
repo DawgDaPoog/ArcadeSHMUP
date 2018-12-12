@@ -18,6 +18,7 @@ ADrop::ADrop()
 	Glow->bAutoActivate = true;
 	Glow->SetupAttachment(RootComponent);
 
+	MessageToForward = FString("You picked up") + *GetName();
 }
 
 // Called when the game starts or when spawned
@@ -42,8 +43,12 @@ void ADrop::NotifyActorBeginOverlap(AActor * OtherActor)
 	{
 		NotifyPlayerPickedUp(Cast<AArcadeSHMUPPawn>(OtherActor));
 		// Forward a message to the GameMode that player had picked up a weapon
-		FString MessageToForward = FString("You picked up") + *GetName();
-		Cast<AArcadeSHMUPGameMode>(GetWorld()->GetAuthGameMode())->SendPlayerAMessage(MessageToForward);
+		MessageThePlayer();
 	}
+}
+
+void ADrop::MessageThePlayer()
+{
+	Cast<AArcadeSHMUPGameMode>(GetWorld()->GetAuthGameMode())->SendPlayerAMessage(MessageToForward);
 }
 

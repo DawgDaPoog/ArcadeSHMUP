@@ -6,6 +6,7 @@
 
 void ARocketDrop::NotifyPlayerPickedUp(AArcadeSHMUPPawn * Player)
 {
+	MessageToForward = FString("You picked up a Rocket!");
 	Player->GetShootingComponent()->OnWeaponPickup(4);
 	Super::NotifyPlayerPickedUp(Player);
 }

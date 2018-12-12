@@ -6,6 +6,7 @@
 
 void AArcDrop::NotifyPlayerPickedUp(AArcadeSHMUPPawn * Player)
 {
+	MessageToForward = FString("You picked up an Arc!");
 	Player->GetShootingComponent()->OnWeaponPickup(5);
 	Super::NotifyPlayerPickedUp(Player);
 }

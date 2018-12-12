@@ -30,9 +30,12 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	FString MessageToForward;
 protected:
 	// Called when player interacts with it
 	virtual void NotifyPlayerPickedUp(class AArcadeSHMUPPawn* Player);
 	
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+
+	void MessageThePlayer();
 };
