@@ -7,6 +7,8 @@
 #include "TimerManager.h"
 #include "Engine/World.h"
 #include "Projectile.h"
+#include "ArcadeSHMUPGameMode.h"
+
 // Sets default values
 AWeapon::AWeapon()
 {
@@ -18,13 +20,13 @@ AWeapon::AWeapon()
 	
 	ParticlesOnShot = CreateDefaultSubobject<UParticleSystemComponent>(FName("OnShootParticles"));
 	ParticlesOnShot->bAutoActivate = false;
+
 }
 
 // Called when the game starts or when spawned
 void AWeapon::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 AProjectile* AWeapon::Fire()
@@ -63,7 +65,7 @@ void AWeapon::AttemptFire()
 
 void AWeapon::Upgrade()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Upgrading Weapon"));
+	//...
 }
 
 float AWeapon::GetKnockBackForce()
@@ -74,6 +76,7 @@ float AWeapon::GetKnockBackForce()
 void AWeapon::SetKnockBackForceModificator(float Modificator)
 {
 	KnockbackForceModificator *= Modificator;
+	KnockbackForce *= KnockbackForceModificator;
 }
 
 float AWeapon::GetRateOfFire()
@@ -84,6 +87,7 @@ float AWeapon::GetRateOfFire()
 void AWeapon::SetRateOfFireModificator(float Modificator)
 {
 	RateOfFireModificator *= Modificator;
+	RateOfFire *= RateOfFireModificator;
 }
 
 float AWeapon::GetProjectileSpeed()
@@ -94,6 +98,7 @@ float AWeapon::GetProjectileSpeed()
 void AWeapon::SetProjectileSpeedModificator(float Modificator)
 {
 	ProjectileSpeedModificator *= Modificator;
+	ProjectileSpeed *= ProjectileSpeedModificator;
 }
 
 float AWeapon::GetDamage()
@@ -104,16 +109,7 @@ float AWeapon::GetDamage()
 void AWeapon::SetDamageModificator(float Modificator)
 {
 	DamageModificator *= Modificator;
-}
-
-float AWeapon::GetProjectileSizeModificator()
-{
-	return ProjectileSizeModificator;
-}
-
-void AWeapon::SetProjectileSizeModificator(float Modificator)
-{
-	ProjectileSizeModificator *= Modificator;
+	Damage *= DamageModificator;
 }
 
 void AWeapon::BroadcastKnockback()

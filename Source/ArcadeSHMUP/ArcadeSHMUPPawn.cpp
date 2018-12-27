@@ -17,7 +17,7 @@
 #include "Components/ArrowComponent.h"
 #include "TimerManager.h"
 #include "ArcadeSHMUPGameMode.h"
-
+#include "Particles/ParticleSystemComponent.h"
 
 const FName AArcadeSHMUPPawn::MoveForwardBinding("UpMovement");
 const FName AArcadeSHMUPPawn::MoveRightBinding("RightMovement");
@@ -45,6 +45,11 @@ AArcadeSHMUPPawn::AArcadeSHMUPPawn()
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("TopDownCamera"));
 	CameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	CameraComponent->bUsePawnControlRotation = false;	// Camera does not rotate relative to arm
+
+	// Creating a default particle system for when we get hurt
+	InvulnurabilityParticles = CreateDefaultSubobject<UParticleSystemComponent>(FName("InvulnurabilityParticles"));
+	InvulnurabilityParticles->SetAutoActivate(false); // We will activate it only when needed
+	InvulnurabilityParticles->SetupAttachment(RootComponent);
 
 	// Component to handle shooting
 	ShootingComponent = CreateDefaultSubobject<UShootingComponent>(FName("ShootingComponent"));
@@ -247,8 +252,12 @@ void AArcadeSHMUPPawn::TakeDamage()
 		Destroy();
 	}
 
+
 	// Setting invincibility for a short time after being damaged
 	bIsInvincible = true;
+
+	// Showing particles that signify that player is invulnurable
+	InvulnurabilityParticles->Activate();
 
 	// Timer handler and delegate to set invincibility end timer
 	FTimerHandle Handle;
@@ -257,6 +266,7 @@ void AArcadeSHMUPPawn::TakeDamage()
 	// Setting a delegate
 	Delegate.BindLambda([&]()
 	{
+		InvulnurabilityParticles->Deactivate();
 		bIsInvincible = false;
 	});
 

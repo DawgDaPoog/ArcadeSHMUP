@@ -36,4 +36,6 @@ private:
 
 	// Attempting to spawn an actor if there is no collision on it. If we did, destroy this actor, ending the cycle of repeating the attempt of spawning
 	void TrySpawnAndDestroy();
+
+	class AArcadeSHMUPGameMode* CurrentGameMode;
 };

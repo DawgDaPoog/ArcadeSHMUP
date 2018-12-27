@@ -63,11 +63,13 @@ protected:
 
 	// Function to broadcast. Upon recieving this, Shooting Component will 
 	void BroadcastKnockback();
+
 private:
 
 	// Functions to start and finish reloading
 	void SetReloadTimer();
 	void ReloadFinished();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -76,7 +78,7 @@ public:
 	void AttemptFire();
 
 	// Function to upgrade the weapon (Increase modificators)
-	void Upgrade();
+	virtual void Upgrade();
 
 	// Asking the knockback force of this weapon
 	float GetKnockBackForce();
@@ -101,10 +103,4 @@ public:
 
 	// Setting weapn damage modificator
 	void SetDamageModificator(float Modificator);
-
-	// Getting projectile size modificator
-	float GetProjectileSizeModificator();
-
-	// Setting projectile size modificator
-	void SetProjectileSizeModificator(float Modificator);
 };

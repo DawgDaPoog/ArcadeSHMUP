@@ -79,4 +79,7 @@ private:
 	// Array of struct that corresponds weapons to it's arrows
 	TArray<FWeaponArrowReference> WeaponsArrows;
 
+	// Pointer to the current game mode
+	class AArcadeSHMUPGameMode* CurrentGameMode;
+
 };

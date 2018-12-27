@@ -4,6 +4,7 @@
 #include "TimerManager.h"
 #include "Enemy.h"
 #include "Engine/World.h"
+#include "ArcadeSHMUPGameMode.h"
 
 // Sets default values
 ASpawnerActor::ASpawnerActor()
@@ -21,6 +22,10 @@ void ASpawnerActor::BeginPlay()
 	// Setting a repeating timer to check for collision and spawn an enemy if we have none
 	FTimerHandle Handle;
 	GetWorldTimerManager().SetTimer(Handle, this, &ASpawnerActor::TrySpawnAndDestroy, 1.f, true, 1.f);
+
+	CurrentGameMode = Cast<AArcadeSHMUPGameMode>(GetWorld()->GetAuthGameMode());
+
+	check(CurrentGameMode);
 }
 
 // Called every frame
@@ -54,9 +59,10 @@ void ASpawnerActor::TrySpawnAndDestroy()
 	// If we didn't find any overlapping with player or enemy, spawn an enemy
 	auto SpawnedEnemy = GetWorld()->SpawnActorDeferred<AEnemy>(EnemyToSpawn, GetActorTransform());
 	//SpawnedEnemy->NotifyGameModeOfEnemySpawned();
-	// TODO Set the modifiers on enemies here... When you have finished the system that is
+	// Set the modifiers on enemies here
+	
 	SpawnedEnemy->FinishSpawning(GetActorTransform());
-
+	SpawnedEnemy->SetHealthModificator(CurrentGameMode->GetEnemyHealthModificator());
 	// Destroying this actor to end checking for collision and spawning
 	Destroy();
 }

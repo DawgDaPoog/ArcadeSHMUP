@@ -4,8 +4,6 @@
 #include "../ArcadeSHMUPPawn.h"
 #include "Components/StaticMeshComponent.h"
 #include "Particles/ParticleSystemComponent.h"
-#include "../ArcadeSHMUPGameMode.h"
-#include "Engine/World.h"
 
 // Sets default values
 ADrop::ADrop()
@@ -18,7 +16,6 @@ ADrop::ADrop()
 	Glow->bAutoActivate = true;
 	Glow->SetupAttachment(RootComponent);
 
-	MessageToForward = FString("You picked up") + *GetName();
 }
 
 // Called when the game starts or when spawned
@@ -42,13 +39,7 @@ void ADrop::NotifyActorBeginOverlap(AActor * OtherActor)
 	if (OtherActor->ActorHasTag("Player"))
 	{
 		NotifyPlayerPickedUp(Cast<AArcadeSHMUPPawn>(OtherActor));
-		// Forward a message to the GameMode that player had picked up a weapon
-		MessageThePlayer();
 	}
 }
 
-void ADrop::MessageThePlayer()
-{
-	Cast<AArcadeSHMUPGameMode>(GetWorld()->GetAuthGameMode())->SendPlayerAMessage(MessageToForward);
-}
 

@@ -19,6 +19,10 @@ class AArcadeSHMUPPawn : public APawn
 	UPROPERTY(Category = Camera, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* CameraComponent;
 
+	/* The particle component that is activated when the player is hurt and activates a brief window of invulnurability */
+	UPROPERTY(Category = Particles, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		class UParticleSystemComponent* InvulnurabilityParticles;
+
 	/** Camera boom positioning the camera above the character */
 	UPROPERTY(Category = Camera, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;

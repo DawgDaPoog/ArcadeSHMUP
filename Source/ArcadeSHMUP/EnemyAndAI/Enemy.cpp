@@ -30,8 +30,9 @@ void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// Telling the game mode that we got spawned.
+	// Setting health
 	
+
 }
 
 void AEnemy::NotifyHit(UPrimitiveComponent * MyComp, AActor * Other, UPrimitiveComponent * OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult & Hit)
@@ -86,6 +87,12 @@ void AEnemy::TakeDamage(float Damage)
 	{
 		SequenceDestroy();
 	}
+}
+
+void AEnemy::SetHealthModificator(float Modificator)
+{
+	HealthModificator *= Modificator;
+	HitPoints *= HealthModificator;
 }
 
 

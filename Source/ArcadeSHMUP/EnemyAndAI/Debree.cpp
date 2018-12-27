@@ -24,7 +24,7 @@ ADebree::ADebree()
 void ADebree::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	Mesh->SetPhysicsLinearVelocity(FMath::VRand().GetSafeNormal()*500.f);
 	Mesh->SetPhysicsAngularVelocityInDegrees(FMath::VRand().GetSafeNormal()*FMath::RandRange(0.f,10.f));
 }

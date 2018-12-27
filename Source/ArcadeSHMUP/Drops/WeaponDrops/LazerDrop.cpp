@@ -6,7 +6,6 @@
 
 void ALazerDrop::NotifyPlayerPickedUp(AArcadeSHMUPPawn * Player)
 {
-	MessageToForward = FString("You picked up a Lazer!");
 	Player->GetShootingComponent()->OnWeaponPickup(3);
 	Super::NotifyPlayerPickedUp(Player);
 }

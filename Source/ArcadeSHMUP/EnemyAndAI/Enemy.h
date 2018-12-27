@@ -59,6 +59,9 @@ protected:
 
 	// Sequence for destroying the enemy
 	virtual void SequenceDestroy();
+
+	// Health modificator
+	float HealthModificator = 1.f;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -70,5 +73,5 @@ public:
 
 	FEnemyDelegate OnDeath;
 
-	
+	void SetHealthModificator(float Modificator);
 };

@@ -27,3 +27,12 @@ AProjectile* AShotgun::Fire()
 	BroadcastKnockback();
 	return nullptr;
 }
+
+void AShotgun::Upgrade()
+{
+	// Upgrading a shotgun
+	SetRateOfFireModificator(0.9f);
+	SetKnockBackForceModificator(1.02f);
+	Spread *= 0.9;
+	AmountOfSpawnedProjectiles *= 1.2;
+}

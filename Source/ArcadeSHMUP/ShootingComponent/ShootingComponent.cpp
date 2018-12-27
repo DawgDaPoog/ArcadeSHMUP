@@ -4,6 +4,7 @@
 #include "Engine/StaticMesh.h"
 #include "Engine/World.h"
 #include "../ArcadeSHMUPPawn.h"
+#include "../ArcadeSHMUPGameMode.h"
 #include "Components/ArrowComponent.h"
 #include "Weapon.h"
 // Sets default values for this component's properties
@@ -24,7 +25,7 @@ void UShootingComponent::BeginPlay()
 
 	// ...
 	
-	
+	CurrentGameMode = Cast<AArcadeSHMUPGameMode>(GetWorld()->GetAuthGameMode());
 }
 
 
@@ -101,9 +102,12 @@ void UShootingComponent::SequencePickupWeapon(const int32 &WeaponNumber)
 		//Add to list of weapons
 		WeaponsArrows.Add(NewReference);
 
-		UE_LOG(LogTemp, Warning, TEXT("Created, Binding"));
 		//Subscribing to the Weapons OnFire delegate to start the knockback sequence
 		NewReference.Weapon->OnFire.AddUniqueDynamic(this, &UShootingComponent::ReactOnWeaponFire);
+
+		//Message to the player that we have added another weapon to his arsenal
+		FString MessageToSend = "You have picked up " + WeaponType.ToString();
+		CurrentGameMode->SendPlayerAMessage(MessageToSend);
 	}
 	else
 	{
@@ -112,16 +116,18 @@ void UShootingComponent::SequencePickupWeapon(const int32 &WeaponNumber)
 		{
 			if (WeaponArrow.Type == WeaponType)
 			{
+				// TODO determine what kind of upgrade we are gonna do and implement the behavior here. Also add a message to signify what was upgraded
 				WeaponArrow.Weapon->Upgrade();
 			}
 		}
+		//Message to the player that we have upgraded his weapons
+		FString MessageToSend = "You have upgraded your " + WeaponType.ToString();
+		CurrentGameMode->SendPlayerAMessage(MessageToSend);
 	}
 }
 
 int32 UShootingComponent::CheckAmountOfSpawnedByType(FName Type)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Went in the CheckAmountOfSpawned"));
-
 	// Finding how much weapons of given type was already spawned
 	int32 HowManyHasAlreadyBeenSpawned = 0;
 	for (auto WeaponsArrow : WeaponsArrows)
@@ -131,9 +137,7 @@ int32 UShootingComponent::CheckAmountOfSpawnedByType(FName Type)
 			HowManyHasAlreadyBeenSpawned++;
 		}
 	}
-	//UE_LOG(LogTemp, Warning, TEXT("Finished in the CheckAmountOfSpawned"));
 	return HowManyHasAlreadyBeenSpawned;
-
 }
 
 void UShootingComponent::AttemptShooting()

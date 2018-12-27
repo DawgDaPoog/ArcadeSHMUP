@@ -242,6 +242,11 @@ void AArcadeSHMUPGameMode::SendPlayerAMessage(FString& Message)
 	}
 }
 
+float AArcadeSHMUPGameMode::GetEnemyHealthModificator() const
+{
+	return EnemyHealthModificator;
+}
+
 void AArcadeSHMUPGameMode::WaveSpawn()
 {
 	// Early return if we have no spawn points

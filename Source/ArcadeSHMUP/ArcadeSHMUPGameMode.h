@@ -56,6 +56,9 @@ public:
 
 	// Sending Player a message to show on screen during playing
 	void SendPlayerAMessage(FString& Message);
+
+	// Access the modificator of enemy health
+	float GetEnemyHealthModificator() const;
 private:
 	// Saves a game to save slot 0
 	void SaveGame();
@@ -88,6 +91,9 @@ private:
 	int SimpleEnemyWeaponDropChance = 2;
 	int AverageEnemyWeaponDropChance = 10;
 	int AdvancedEnemyWeaponDropChance = 20;
+
+	// Health modificator for enemies that are spawned
+	float EnemyHealthModificator = 1.f;
 
 	// Intencity level that decides the amounts of spawns and their types
 	int Intencity;
