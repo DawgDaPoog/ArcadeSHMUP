@@ -23,6 +23,8 @@ void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	ProjectileCurrentSpeed = ProjectileInitialSpeed;
+
 	SetLifeSpan(3.f);
 }
 
@@ -42,8 +44,8 @@ void AProjectile::ReactToEnemy(AActor * Enemy)
 void AProjectile::Move(float DeltaTime)
 {
 	SetActorLocation(GetActorLocation() + GetActorForwardVector()*ProjectileCurrentSpeed*DeltaTime);
-	//ProjectileMesh->SetPhysicsLinearVelocity(GetActorForwardVector()*ProjectileCurrentSpeed);
-	
+
+
 	if (ProjectileCurrentSpeed >= ProjectileMaxSpeed)
 	{
 		ProjectileCurrentSpeed = ProjectileMaxSpeed;
@@ -59,11 +61,26 @@ void AProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	Move(DeltaTime);
+	if (bMoving)
+	{
+		Move(DeltaTime);
+	}
 }
 
 void AProjectile::SetDamage(float DamageToSet)
 {
 	Damage = DamageToSet;
+}
+
+void AProjectile::SetProjectileSpeedModificator(float Modificator)
+{
+	ProjectileInitialSpeed *= Modificator;
+	ProjectileMaxSpeed *= Modificator;
+	ProjectileAcceleration *= Modificator;
+}
+
+void AProjectile::SetProjectileSizeModificator(float Modificator)
+{
+	SetActorScale3D(GetActorScale3D()*Modificator);
 }
 

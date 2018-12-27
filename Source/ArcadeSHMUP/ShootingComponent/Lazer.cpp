@@ -17,5 +17,12 @@ AProjectile* ALazer::Fire()
 	return Super::Fire(); 
 }
 
+void ALazer::Upgrade()
+{
+	SetDamageModificator(1.2f);
+	SetProjectileSpeedModificator(1.1f);
+	SetProjectileSizeModificator(1.3f);
+}
+
 
 

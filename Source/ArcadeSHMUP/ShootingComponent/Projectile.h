@@ -40,11 +40,15 @@ protected:
 	virtual void ReactToEnemy(AActor* Enemy);
 
 	void Move(float DeltaTime);
+
+	bool bMoving = true;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	void SetDamage(float DamageToSet);
 	
-	
+	void SetProjectileSpeedModificator(float Modificator);
+
+	void SetProjectileSizeModificator(float Modificator);
 };

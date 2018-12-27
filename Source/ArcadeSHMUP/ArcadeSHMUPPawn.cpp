@@ -145,7 +145,7 @@ void AArcadeSHMUPPawn::BeginPlay()
 		{
 			RandWeaponIndex = 3;
 		}
-		ShootingComponent->OnWeaponPickup(0);
+		ShootingComponent->OnWeaponPickup(3);
 	}
 }
 

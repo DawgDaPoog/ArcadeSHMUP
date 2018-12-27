@@ -98,6 +98,12 @@ public:
 	// Setting projectile speed modificator
 	void SetProjectileSpeedModificator(float Modificator);
 
+	// Setting projectile size modificator
+	void SetProjectileSizeModificator(float Modificator);
+
+	// Getting projectile size modificator
+	float GetProjectileSizeModificator() const;
+
 	// Asking for weapon damage
 	float GetDamage();
 

@@ -13,6 +13,7 @@
 #include "ArcadeSHMUPPawn.h"
 #include "GameFramework/PlayerController.h"
 #include "Drops/DropManager.h"
+#include "Drops/Drop.h"
 
 AArcadeSHMUPGameMode::AArcadeSHMUPGameMode()
 {
@@ -109,7 +110,10 @@ void AArcadeSHMUPGameMode::StartNewGameCycle(FString SaveFileName)
 	// Destroying Every Single one of Enemies
 	for (auto Enemy : FoundActors)
 	{
-		Enemy->Destroy();
+		if (Enemy)
+		{
+			Enemy->Destroy();
+		}
 	}
 
 	// Find all the lingering SpawnerActor's
@@ -118,7 +122,22 @@ void AArcadeSHMUPGameMode::StartNewGameCycle(FString SaveFileName)
 	// Destroying them
 	for (auto SpawnerActor : FoundActors)
 	{
-		SpawnerActor->Destroy();
+		if (SpawnerActor)
+		{
+			SpawnerActor->Destroy();
+		}
+	}
+
+	// Find all lingering drops in the area
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ADrop::StaticClass(), FoundActors);
+
+	// Destroy all lingering drops
+	for (auto Drop : FoundActors)
+	{
+		if (Drop)
+		{
+			Drop->Destroy();
+		}
 	}
 
 	//Finding the player start
@@ -129,8 +148,6 @@ void AArcadeSHMUPGameMode::StartNewGameCycle(FString SaveFileName)
 	check(PlayerStart)
 	CurrentPlayerActor = GetWorld()->SpawnActor<AArcadeSHMUPPawn>(Player, PlayerStart->GetActorLocation(), PlayerStart->GetActorRotation());
 	GetWorld()->GetFirstPlayerController()->SetInputMode(FInputModeGameOnly());
-	
-	
 }
 
 void AArcadeSHMUPGameMode::EndGameCycle()

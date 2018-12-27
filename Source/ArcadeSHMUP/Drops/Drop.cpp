@@ -23,6 +23,7 @@ void ADrop::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	Tags.Add(FName("Drop"));
 }
 
 void ADrop::NotifyPlayerPickedUp(AArcadeSHMUPPawn* Player)

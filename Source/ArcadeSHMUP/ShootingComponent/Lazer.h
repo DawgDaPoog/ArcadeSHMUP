@@ -16,6 +16,8 @@ class ARCADESHMUP_API ALazer : public AWeapon
 		ALazer();
 
 		virtual AProjectile* Fire() override;
-	
+		
+		// Function to upgrade the weapon (Increase modificators)
+		virtual void Upgrade() override;
 	
 };

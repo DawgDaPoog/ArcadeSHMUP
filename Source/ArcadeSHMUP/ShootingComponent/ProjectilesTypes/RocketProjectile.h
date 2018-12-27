@@ -16,7 +16,12 @@ class ARCADESHMUP_API ARocketProjectile : public AProjectile
 
 	ARocketProjectile();
 
+	float ExplosionRangeModificator = 1.f;
 protected:
 	virtual void ReactToEnemy(AActor* Enemy) override;
 	
+	UPROPERTY(EditDefaultsOnly, Category = "Explosion Actor")
+		TSubclassOf<AProjectile> RocketExplosion;
+public:
+	void SetExplosionRangeModificator(float Modificator);
 };

@@ -106,7 +106,7 @@ void UShootingComponent::SequencePickupWeapon(const int32 &WeaponNumber)
 		NewReference.Weapon->OnFire.AddUniqueDynamic(this, &UShootingComponent::ReactOnWeaponFire);
 
 		//Message to the player that we have added another weapon to his arsenal
-		FString MessageToSend = "You have picked up " + WeaponType.ToString();
+		FString MessageToSend = "You have picked up " + WeaponType.ToString()+ "!";
 		CurrentGameMode->SendPlayerAMessage(MessageToSend);
 	}
 	else
@@ -121,7 +121,7 @@ void UShootingComponent::SequencePickupWeapon(const int32 &WeaponNumber)
 			}
 		}
 		//Message to the player that we have upgraded his weapons
-		FString MessageToSend = "You have upgraded your " + WeaponType.ToString();
+		FString MessageToSend = "You have upgraded your " + WeaponType.ToString()+"s!";
 		CurrentGameMode->SendPlayerAMessage(MessageToSend);
 	}
 }

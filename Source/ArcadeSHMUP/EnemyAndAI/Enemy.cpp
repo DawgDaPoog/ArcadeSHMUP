@@ -81,6 +81,7 @@ void AEnemy::Tick(float DeltaTime)
 
 void AEnemy::TakeDamage(float Damage)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Took %f damage"), Damage);
 	HitPoints -= Damage;
 
 	if (HitPoints <= 0.f)

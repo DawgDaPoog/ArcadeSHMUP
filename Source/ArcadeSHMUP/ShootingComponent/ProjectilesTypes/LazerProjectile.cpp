@@ -6,7 +6,7 @@
 ALazerProjectile::ALazerProjectile()
 {
 	Damage = 0.07f;
-	ProjectileInitialSpeed = 4500.f;
+	ProjectileInitialSpeed = 5000.f;
 }
 
 void ALazerProjectile::ReactToEnemy(AActor * Enemy)

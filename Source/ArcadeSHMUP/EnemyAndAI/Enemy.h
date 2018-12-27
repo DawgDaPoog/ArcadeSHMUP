@@ -39,6 +39,7 @@ protected:
 	virtual void ReactToPlayer(class AArcadeSHMUPPawn* Player);
 
 	// Enemy health
+	//UPROPERTY(EditAnywhere, meta = (BlueprintProtected = "true"))
 	float HitPoints = 0.f;
 
 	// How much points do you get when killing this enemy
