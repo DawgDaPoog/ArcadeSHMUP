@@ -18,5 +18,13 @@ AProjectile* AMachinegun::Fire()
 	return Super::Fire(); 
 }
 
+void AMachinegun::Upgrade()
+{
+	SetDamageModificator(1.15f);
+	SetProjectileSpeedModificator(1.1f);
+	SetRateOfFireModificator(1.15f);
+	SetKnockBackForceModificator(1.1f);
+}
+
 
 

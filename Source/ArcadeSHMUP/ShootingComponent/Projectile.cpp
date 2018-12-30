@@ -32,6 +32,7 @@ void AProjectile::NotifyActorBeginOverlap(AActor * OtherActor)
 {
 	if (OtherActor->ActorHasTag("Enemy"))
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Overlapped with enemy. Deal Damage"));
 		ReactToEnemy(OtherActor);
 	}
 }

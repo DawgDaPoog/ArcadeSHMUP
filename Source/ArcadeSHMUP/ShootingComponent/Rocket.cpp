@@ -21,3 +21,11 @@ AProjectile* ARocket::Fire()
 	return Rocket;
 }
 
+void ARocket::Upgrade()
+{
+	SetRateOfFireModificator(1.2f);
+	SetDamageModificator(1.05f);
+	SetProjectileSizeModificator(1.15f);
+	SetKnockBackForceModificator(1.08f);
+}
+

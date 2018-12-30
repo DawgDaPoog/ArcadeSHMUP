@@ -19,7 +19,7 @@ AProjectile* ALazer::Fire()
 
 void ALazer::Upgrade()
 {
-	SetDamageModificator(1.2f);
+	SetDamageModificator(1.12f);
 	SetProjectileSpeedModificator(1.1f);
 	SetProjectileSizeModificator(1.3f);
 }

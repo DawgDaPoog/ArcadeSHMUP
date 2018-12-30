@@ -19,4 +19,5 @@ class ARCADESHMUP_API ARocket : public AWeapon
 
 		virtual AProjectile* Fire() override;
 	
+		virtual void Upgrade() override;
 };

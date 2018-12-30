@@ -18,5 +18,6 @@ class ARCADESHMUP_API AMachinegun : public AWeapon
 
 	virtual AProjectile* Fire() override;
 	
+	virtual void Upgrade() override;
 
 };

@@ -88,7 +88,7 @@ float AWeapon::GetRateOfFire()
 void AWeapon::SetRateOfFireModificator(float Modificator)
 {
 	RateOfFireModificator *= Modificator;
-	RateOfFire *= Modificator;
+	RateOfFire -= RateOfFire*(Modificator-1.f);
 }
 
 float AWeapon::GetProjectileSpeed()

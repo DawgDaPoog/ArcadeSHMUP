@@ -31,7 +31,7 @@ AProjectile* AShotgun::Fire()
 void AShotgun::Upgrade()
 {
 	// Upgrading a shotgun
-	SetRateOfFireModificator(0.9f);
+	SetRateOfFireModificator(1.05f);
 	SetKnockBackForceModificator(1.02f);
 	Spread *= 0.9;
 	AmountOfSpawnedProjectiles *= 1.2;

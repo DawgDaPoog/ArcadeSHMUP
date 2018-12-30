@@ -7,6 +7,7 @@ AArcProjectile::AArcProjectile()
 {
 	Damage = 0.05f;
 	ProjectileInitialSpeed = 0.f;
+	bMoving = false;
 
 	ZoneOfAttackEffect = CreateDefaultSubobject<UStaticMeshComponent>(FName("AreaOfAttack"));
 	ZoneOfAttackEffect->SetupAttachment(RootComponent);
@@ -15,22 +16,24 @@ AArcProjectile::AArcProjectile()
 	ZoneOfAttackEffect->SetCollisionProfileName("OverlapAll");
 }
 
-void AArcProjectile::InitiateSequenceDealDamage()
+
+void AArcProjectile::BeginPlay()
 {
-	//Deal damage to all overlapping enemies
-	TArray<AActor*> Actors;
-	GetOverlappingActors(Actors);
-	for (auto OverlappingActor : Actors)
+	Super::BeginPlay();
+	// Stay alive for 3 frames
+	SetLifeSpan(2.f / 60.f);
+}
+
+void AArcProjectile::NotifyActorBeginOverlap(AActor * OtherActor)
+{
+	// Emmit the praticles to the enemy before dealing damage to him
+	if (OtherActor->ActorHasTag("Enemy"))
 	{
-		if (OverlappingActor->ActorHasTag("Enemy"))
-		{
-			EmmitParticleEffectsTo(OverlappingActor);
-			ReactToEnemy(OverlappingActor);
-		}
+		UE_LOG(LogTemp, Warning, TEXT("Initiating Particle Effects To Enemy"));
+		EmmitParticleEffectsTo(OtherActor);
 	}
-	
-	
-	SetLifeSpan(2.f/60.f);
+
+	Super::NotifyActorBeginOverlap(OtherActor);
 }
 
 

@@ -20,8 +20,9 @@ class ARCADESHMUP_API AArcProjectile : public AProjectile
 public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Visual")
 	void EmmitParticleEffectsTo(const AActor* Actor);
-
-	void InitiateSequenceDealDamage();
 	
+	virtual void BeginPlay() override;
+	
+	virtual void NotifyActorBeginOverlap(AActor * OtherActor) override;
 	
 };

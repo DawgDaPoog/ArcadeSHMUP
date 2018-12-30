@@ -14,10 +14,12 @@ AArc::AArc()
 
 AProjectile* AArc::Fire()
 {
-	auto SpawnedProjectile = Super::Fire();
-	Cast<AArcProjectile>(SpawnedProjectile)->InitiateSequenceDealDamage();
-
 	BroadcastKnockback();
+	return Super::Fire();
+}
 
-	return SpawnedProjectile;
+void AArc::Upgrade()
+{
+	SetDamageModificator(1.02f);
+	SetProjectileSizeModificator(1.2f);
 }

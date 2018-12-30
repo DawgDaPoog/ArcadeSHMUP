@@ -17,3 +17,11 @@ AProjectile* ARifle::Fire()
 	BroadcastKnockback();
 	return Super::Fire();
 }
+
+void ARifle::Upgrade()
+{
+	SetRateOfFireModificator(1.15f);
+	SetKnockBackForceModificator(1.1f);
+	SetDamageModificator(1.08f);
+	SetProjectileSpeedModificator(1.2f);
+}
