@@ -226,7 +226,7 @@ void AArcadeSHMUPGameMode::ReactToEnemyDeath(int PointsAwarded, FVector DeathLoc
 	CurrentScore += PointsAwarded;
 
 	// Chance to drop a weapon on it's death location, depenging on the type of an enemy
-	int TempDropChance = 0; 
+	float TempDropChance = 0; 
 	switch (WeaponDropPriority)
 	{
 	case 0:
@@ -244,11 +244,52 @@ void AArcadeSHMUPGameMode::ReactToEnemyDeath(int PointsAwarded, FVector DeathLoc
 		TempDropChance = 100;
 	}
 
-	if (FMath::RandRange(1, 100) <= TempDropChance)
+	if (FMath::RandRange(1.f, 100.f) <= TempDropChance) 
 	{
+		// Make a random drop on the place where enemy has died
 		DropManager->InitializeRandomDropAtLocation(DeathLocation);
+
+		// Reset the drop chance for that weapon drop priority
+		switch (WeaponDropPriority)
+		{
+		case 0:
+			break;
+		case 1:
+			SimpleEnemyWeaponDropChance = InitialSimpleEnemyWeaponDropChance;
+			break;
+		case 2:
+			AverageEnemyWeaponDropChance = InitialAverageEnemyWeaponDropChance; 
+			break;
+		case 3:
+			AdvancedEnemyWeaponDropChance = InitialAdvancedEnemyWeaponDropChance;
+			break;
+		default:
+			break;
+		}
 	}
-	// Chance to drop modification on it's death location, depending on the type of an enemy
+	else
+	{
+		// Chance to drop modification on it's death location, depending on the type of an enemy
+		switch (WeaponDropPriority)
+		{
+		case 0:
+			break;
+		case 1:
+			SimpleEnemyWeaponDropChance += 0.5f; // +0.5% to drop chance when we didn't get a drop from simple enemy
+			UE_LOG(LogTemp, Warning, TEXT("%f weapon drop chance"), SimpleEnemyWeaponDropChance);
+			break;
+		case 2:
+			AverageEnemyWeaponDropChance += 2; //  +2% to drop chance when we didn't get a drop from average enemy
+			break;
+		case 3:
+			AdvancedEnemyWeaponDropChance += 5; // +5% to drop chance when we didn't get a drop from average enemy
+			break;
+		default:
+			break;
+
+		}
+	}
+
 }
 
 void AArcadeSHMUPGameMode::SendPlayerAMessage(FString& Message)

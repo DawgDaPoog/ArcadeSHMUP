@@ -14,7 +14,7 @@ class ARCADESHMUP_API UBTService_CheckForPlayer : public UBTService
 {
 	GENERATED_BODY()
 
-		UBTService_CheckForPlayer();
+	UBTService_CheckForPlayer();
 	
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
 

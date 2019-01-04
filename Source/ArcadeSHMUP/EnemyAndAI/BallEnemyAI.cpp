@@ -19,8 +19,10 @@ void ABallEnemyAI::Possess(APawn * InPawn)
 {
 	Super::Possess(InPawn);
 
+	// Casting our possessed pawn to the proper enemy class
 	Pawn = Cast<AEnemyBallPawn>(InPawn);
 
+	// Initializing blackboard and setting enemy key id. Starting behavior tree
 	if (Pawn && Pawn->BehaviorTree)
 	{
 		BlackboardComp->InitializeBlackboard(*Pawn->BehaviorTree->BlackboardAsset);
@@ -33,22 +35,26 @@ void ABallEnemyAI::Possess(APawn * InPawn)
 
 FVector ABallEnemyAI::GetOwnerPosition()
 {
+	// Getting owner location
 	return Pawn->GetActorLocation();
 }
 
 void ABallEnemyAI::SetOwnerMovePoint(FVector MoveTo)
 {
+	// Moving to a point
 	Pawn->SetPointDestination(MoveTo);
 	Pawn->bIsMovingToPoint = true;
 }
 
 void ABallEnemyAI::ResetOwnerMovePoint()
 {
+	// Reseting the value that says that we are moving
 	Pawn->bIsMovingToPoint = false;
 }
 
 void ABallEnemyAI::StartAttackSequence(FVector Direction)
 {
+	// Telling enemy to attack the player
 	Pawn->StartAttackAt(Direction);
 }
 

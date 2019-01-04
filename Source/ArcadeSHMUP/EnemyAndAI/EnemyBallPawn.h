@@ -15,8 +15,6 @@ public:
 	// Sets default values for this pawn's properties
 	AEnemyBallPawn();
 
-
-	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

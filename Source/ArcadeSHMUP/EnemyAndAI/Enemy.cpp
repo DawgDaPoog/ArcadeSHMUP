@@ -30,9 +30,6 @@ void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// Setting health
-	
-
 }
 
 void AEnemy::NotifyHit(UPrimitiveComponent * MyComp, AActor * Other, UPrimitiveComponent * OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult & Hit)
@@ -93,7 +90,7 @@ void AEnemy::TakeDamage(float Damage)
 void AEnemy::SetHealthModificator(float Modificator)
 {
 	HealthModificator *= Modificator;
-	HitPoints *= HealthModificator;
+	HitPoints *= Modificator;
 }
 
 

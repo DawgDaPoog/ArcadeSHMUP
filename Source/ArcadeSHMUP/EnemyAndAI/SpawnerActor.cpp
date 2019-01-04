@@ -19,13 +19,15 @@ void ASpawnerActor::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Finding and setting a current game mode in order to get a health modificator for the enemy down the line
+	CurrentGameMode = Cast<AArcadeSHMUPGameMode>(GetWorld()->GetAuthGameMode());
+
+	check(CurrentGameMode);
+
 	// Setting a repeating timer to check for collision and spawn an enemy if we have none
 	FTimerHandle Handle;
 	GetWorldTimerManager().SetTimer(Handle, this, &ASpawnerActor::TrySpawnAndDestroy, 1.f, true, 1.f);
 
-	CurrentGameMode = Cast<AArcadeSHMUPGameMode>(GetWorld()->GetAuthGameMode());
-
-	check(CurrentGameMode);
 }
 
 // Called every frame
@@ -59,10 +61,13 @@ void ASpawnerActor::TrySpawnAndDestroy()
 	// If we didn't find any overlapping with player or enemy, spawn an enemy
 	auto SpawnedEnemy = GetWorld()->SpawnActorDeferred<AEnemy>(EnemyToSpawn, GetActorTransform());
 	//SpawnedEnemy->NotifyGameModeOfEnemySpawned();
-	// Set the modifiers on enemies here
-	
-	SpawnedEnemy->FinishSpawning(GetActorTransform());
+
+	// Setting a health modificator for a given enemy
 	SpawnedEnemy->SetHealthModificator(CurrentGameMode->GetEnemyHealthModificator());
+
+	// Finishing spawning
+	SpawnedEnemy->FinishSpawning(GetActorTransform());
+
 	// Destroying this actor to end checking for collision and spawning
 	Destroy();
 }

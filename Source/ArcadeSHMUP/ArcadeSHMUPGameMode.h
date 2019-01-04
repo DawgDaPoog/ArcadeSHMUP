@@ -88,9 +88,14 @@ private:
 	int WaveSpawnAdvancedMax;
 
 	// Variables to calculate chances of dropping modification/weapon
-	int SimpleEnemyWeaponDropChance = 2;
-	int AverageEnemyWeaponDropChance = 10;
-	int AdvancedEnemyWeaponDropChance = 20;
+	const float InitialSimpleEnemyWeaponDropChance = 2.f;
+	float SimpleEnemyWeaponDropChance = InitialSimpleEnemyWeaponDropChance;
+
+	const float InitialAverageEnemyWeaponDropChance = 10.f;
+	float AverageEnemyWeaponDropChance = InitialAverageEnemyWeaponDropChance;
+
+	const float InitialAdvancedEnemyWeaponDropChance = 20.f;
+	float AdvancedEnemyWeaponDropChance = InitialAdvancedEnemyWeaponDropChance;
 
 	// Health modificator for enemies that are spawned
 	float EnemyHealthModificator = 1.f;

@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
-#include "BallEnemyAI.generated.h"
+#include "EnemySuiciderAI.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class ARCADESHMUP_API ABallEnemyAI : public AAIController
+class ARCADESHMUP_API AEnemySuiciderAI : public AAIController
 {
 	GENERATED_BODY()
 
@@ -20,18 +20,15 @@ class ARCADESHMUP_API ABallEnemyAI : public AAIController
 	UPROPERTY(Transient)
 	class UBehaviorTreeComponent* BehaviorComp;
 
-	class AEnemyBallPawn* Pawn;
+	class AEnemySuicider* Pawn;
 public:
-	ABallEnemyAI();
+	AEnemySuiciderAI();
 
 	virtual void Possess(APawn *InPawn) override;
-	
+
 	uint8 EnemyKeyID;
 
+	void SetPerTickVectorValueTowards(FVector PlayerLocation);
+
 	FVector GetOwnerPosition();
-
-	void SetOwnerMovePoint(FVector MoveTo);
-	void ResetOwnerMovePoint();
-
-	void StartAttackSequence(FVector Direction);
 };

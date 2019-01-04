@@ -7,6 +7,8 @@
 AEnemyBallPawn::AEnemyBallPawn()
 {
 	HitPoints = 50.f;
+
+	WeaponDropPriority = 1;
 }
 
 // Called when the game starts or when spawned
