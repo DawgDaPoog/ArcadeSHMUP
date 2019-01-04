@@ -3,32 +3,21 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AIController.h"
+#include "EnemyAIBase.h"
 #include "EnemySuiciderAI.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class ARCADESHMUP_API AEnemySuiciderAI : public AAIController
+class ARCADESHMUP_API AEnemySuiciderAI : public AEnemyAIBase
 {
 	GENERATED_BODY()
 
-	UPROPERTY(Transient)
-	class UBlackboardComponent* BlackboardComp;
-
-	UPROPERTY(Transient)
-	class UBehaviorTreeComponent* BehaviorComp;
-
-	class AEnemySuicider* Pawn;
+	class AEnemySuicider* EnemyClassPawn;
 public:
-	AEnemySuiciderAI();
 
 	virtual void Possess(APawn *InPawn) override;
 
-	uint8 EnemyKeyID;
-
 	void SetPerTickVectorValueTowards(FVector PlayerLocation);
-
-	FVector GetOwnerPosition();
 };

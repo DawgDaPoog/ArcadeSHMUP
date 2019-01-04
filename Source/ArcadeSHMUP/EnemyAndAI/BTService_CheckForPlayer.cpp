@@ -1,8 +1,7 @@
 // Copyright Vladyslav Kulinych 2018. All Rights Reserved.
 
 #include "BTService_CheckForPlayer.h"
-#include "BallEnemyAI.h"
-#include "EnemySuiciderAI.h"
+#include "EnemyAIBase.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
@@ -18,9 +17,7 @@ UBTService_CheckForPlayer::UBTService_CheckForPlayer()
 void UBTService_CheckForPlayer::TickNode(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory, float DeltaSeconds)
 {
 	// TODO Make this proper OOP, you dipsh*t!
-	ABallEnemyAI* EnemyAI = Cast<ABallEnemyAI>(OwnerComp.GetAIOwner());
-	AEnemySuiciderAI* EnemyAI2 = Cast<AEnemySuiciderAI>(OwnerComp.GetAIOwner());
-
+	AEnemyAIBase* EnemyAI = Cast<AEnemyAIBase>(OwnerComp.GetAIOwner());
 
 	APawn* Enemy = GetWorld()->GetFirstPlayerController()->GetPawn();
 	
@@ -31,15 +28,5 @@ void UBTService_CheckForPlayer::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 			OwnerComp.GetBlackboardComponent()->SetValue<UBlackboardKeyType_Object>(EnemyAI->EnemyKeyID, Enemy);
 		}
 	}
-	else if (EnemyAI2)
-	{
-		if (Enemy)
-		{
-			OwnerComp.GetBlackboardComponent()->SetValue<UBlackboardKeyType_Object>(EnemyAI2->EnemyKeyID, Enemy);
-		}
-	}
-	
-
-	
 }
 

@@ -3,32 +3,21 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AIController.h"
+#include "EnemyAIBase.h"
 #include "BallEnemyAI.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class ARCADESHMUP_API ABallEnemyAI : public AAIController
+class ARCADESHMUP_API ABallEnemyAI : public AEnemyAIBase
 {
 	GENERATED_BODY()
 
-	UPROPERTY(Transient)
-	class UBlackboardComponent* BlackboardComp;
-
-	UPROPERTY(Transient)
-	class UBehaviorTreeComponent* BehaviorComp;
-
-	class AEnemyBallPawn* Pawn;
+	class AEnemyBallPawn* EnemyClassPawn;
 public:
-	ABallEnemyAI();
 
 	virtual void Possess(APawn *InPawn) override;
-	
-	uint8 EnemyKeyID;
-
-	FVector GetOwnerPosition();
 
 	void SetOwnerMovePoint(FVector MoveTo);
 	void ResetOwnerMovePoint();
