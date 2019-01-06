@@ -10,6 +10,12 @@
 EBTNodeResult::Type UMyBTTask_SuiciderMoveToPlayer::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory)
 {
 	AEnemySuiciderAI* EnemyAI = Cast<AEnemySuiciderAI>(OwnerComp.GetAIOwner());
+
+	if (!EnemyAI)
+	{
+		return EBTNodeResult::Failed;
+	}
+
 	APawn* Player = Cast<APawn>(OwnerComp.GetBlackboardComponent()->GetValue<UBlackboardKeyType_Object>(EnemyAI->EnemyKeyID));
 	if (Player)
 	{
@@ -17,10 +23,6 @@ EBTNodeResult::Type UMyBTTask_SuiciderMoveToPlayer::ExecuteTask(UBehaviorTreeCom
 		FVector Direction = DirectionVector;
 
 		EnemyAI->SetPerTickVectorValueTowards(Direction);
-	}
-	else
-	{
-		//UE_LOG(LogTemp, Warning, TEXT("Player not found"));
 	}
 
 	return EBTNodeResult::Succeeded;

@@ -10,6 +10,12 @@
 EBTNodeResult::Type UMyBTTask_BallEnemyAIAttack::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory)
 {
 	ABallEnemyAI* EnemyAI = Cast<ABallEnemyAI>(OwnerComp.GetAIOwner());
+
+	if (!EnemyAI)
+	{
+		return EBTNodeResult::Failed;
+	}
+
 	APawn* Player = Cast<APawn>(OwnerComp.GetBlackboardComponent()->GetValue<UBlackboardKeyType_Object>(EnemyAI->EnemyKeyID));
 	if (Player)
 	{

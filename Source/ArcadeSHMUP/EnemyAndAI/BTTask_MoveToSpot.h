@@ -7,7 +7,7 @@
 #include "BTTask_MoveToSpot.generated.h"
 
 /**
- * 
+ * Task that works only for the BallEnemy. Finds a random place in the given ranges and tells the ball to move there.
  */
 UCLASS()
 class ARCADESHMUP_API UBTTask_MoveToSpot : public UBTTask_BlackboardBase

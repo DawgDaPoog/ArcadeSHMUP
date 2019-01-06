@@ -22,9 +22,9 @@ void AEnemySuicider::Tick(float DeltaTime)
 	Mesh->AddForce(VectorNormalToPlayer*Force);
 
 	// Clamp our movement speed if we have too much velocity on mesh
-	if (GetVelocity().Size() > SpeedLimit)
+	if (GetVelocity().Size() > MaximumVelocity)
 	{
-		Mesh->SetPhysicsLinearVelocity(GetVelocity().GetSafeNormal()*SpeedLimit);
+		Mesh->SetPhysicsLinearVelocity(GetVelocity().GetSafeNormal()*MaximumVelocity);
 	}
 }
 
@@ -41,8 +41,9 @@ void AEnemySuicider::SetForceVectorTo(FVector PlayerLocation)
 
 	FRotator NewRot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), PlayerLocation);
 
-	if(NewRot.Yaw <= GetActorRotation().Yaw)
-	SetActorRotation(GetActorRotation() - FRotator(2.f));
+
+	if (NewRot.Yaw > GetActorRotation().Yaw)
+		SetActorRotation(GetActorRotation() + FRotator(0.f, 2.f, 0.f));
 	else
-	SetActorRotation(GetActorRotation() + FRotator(2.f));
+		SetActorRotation(GetActorRotation() - FRotator(0.f, 2.f, 0.f));
 }

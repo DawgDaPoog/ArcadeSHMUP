@@ -18,14 +18,13 @@ class ARCADESHMUP_API AEnemySuicider : public AEnemy
 
 	virtual void Tick(float DeltaTime) override;
 
-
 	FVector VectorNormalToPlayer;
 
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	float Force = 80000.f;
 
 	UPROPERTY(EditAnywhere, Category = "Movement")
-	float SpeedLimit = 300.f;
+	float MaximumVelocity = 700.f;
 
 	virtual void ReactToPlayer(class AArcadeSHMUPPawn* Player) override;
 public:

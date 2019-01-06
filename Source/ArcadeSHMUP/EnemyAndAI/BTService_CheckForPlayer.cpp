@@ -16,15 +16,17 @@ UBTService_CheckForPlayer::UBTService_CheckForPlayer()
 
 void UBTService_CheckForPlayer::TickNode(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory, float DeltaSeconds)
 {
-	// TODO Make this proper OOP, you dipsh*t!
+	// Getting the enemy ai
 	AEnemyAIBase* EnemyAI = Cast<AEnemyAIBase>(OwnerComp.GetAIOwner());
 
+	// Getting player (Enemy for this ai)
 	APawn* Enemy = GetWorld()->GetFirstPlayerController()->GetPawn();
 	
 	if (EnemyAI)
 	{
 		if (Enemy)
 		{
+			// Setting the player as the enemy for our AI
 			OwnerComp.GetBlackboardComponent()->SetValue<UBlackboardKeyType_Object>(EnemyAI->EnemyKeyID, Enemy);
 		}
 	}

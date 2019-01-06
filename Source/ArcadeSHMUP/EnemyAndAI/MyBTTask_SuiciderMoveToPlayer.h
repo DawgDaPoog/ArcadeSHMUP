@@ -7,7 +7,7 @@
 #include "MyBTTask_SuiciderMoveToPlayer.generated.h"
 
 /**
- * 
+ * Task that only works for Suicider. Tells it's ai to set the force towards player.
  */
 UCLASS()
 class ARCADESHMUP_API UMyBTTask_SuiciderMoveToPlayer : public UBTTask_BlackboardBase

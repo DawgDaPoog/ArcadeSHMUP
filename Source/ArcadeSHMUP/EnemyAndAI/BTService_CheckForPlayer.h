@@ -7,7 +7,7 @@
 #include "BTService_CheckForPlayer.generated.h"
 
 /**
- * 
+ * BTService that is universal for all enemies that finds a player and sets it to the blackboard key
  */
 UCLASS()
 class ARCADESHMUP_API UBTService_CheckForPlayer : public UBTService
@@ -17,5 +17,4 @@ class ARCADESHMUP_API UBTService_CheckForPlayer : public UBTService
 	UBTService_CheckForPlayer();
 	
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
-
 };
