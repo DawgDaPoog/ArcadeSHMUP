@@ -63,16 +63,27 @@ protected:
 
 	// Health modificator
 	float HealthModificator = 1.f;
+
+	// Variable to determine if the enemy is invincible or not
+	bool bIsInvincible = false;
+
+	// Reference to the game mode in case we need something from it or say to it
+	class AArcadeSHMUPGameMode* CurrentGameMode;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	// Behavior tree
 	UPROPERTY(EditDefaultsOnly, Category = "Behavior")
 		class UBehaviorTree* BehaviorTree;
 	
+	// Is called when enemy takes damage and determines if enemy has died with the amount of taken damage or not
 	void TakeDamage(float Damage);
 
+	// 
 	FEnemyDelegate OnDeath;
 
 	void SetHealthModificator(float Modificator);
+
+	virtual void UpgradeToLevel(int32 Level);
 };

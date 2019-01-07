@@ -138,6 +138,8 @@ void AArcadeSHMUPPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
+	bIsInvincible = true;
+
 	if (ShootingComponent)
 	{
 		int RandWeaponIndex = FMath::RandRange(0, 2);

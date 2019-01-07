@@ -21,14 +21,14 @@ public:
 	AEnemyProjectile();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
 
 	virtual void NotifyActorBeginOverlap(AActor * OtherActor) override;
+
+	float ProjectileInitialSpeed = 500.f;
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	
-	
+	void SetProjectileSpeedModificator(float Modificator);
 };

@@ -30,6 +30,9 @@ void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 
+	CurrentGameMode = Cast<AArcadeSHMUPGameMode>(GetWorld()->GetAuthGameMode());
+
+	check(CurrentGameMode);
 }
 
 void AEnemy::NotifyHit(UPrimitiveComponent * MyComp, AActor * Other, UPrimitiveComponent * OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult & Hit)
@@ -59,7 +62,7 @@ void AEnemy::ReactToPlayer(AArcadeSHMUPPawn * Player)
 void AEnemy::SequenceDestroy()
 {
 	// Broadcast destruction to gamemode
-	Cast<AArcadeSHMUPGameMode>(GetWorld()->GetAuthGameMode())->ReactToEnemyDeath(PointsAwardedOnKill, GetActorLocation(), WeaponDropPriority, ModificationDropPriority);
+	CurrentGameMode->ReactToEnemyDeath(PointsAwardedOnKill, GetActorLocation(), WeaponDropPriority, ModificationDropPriority);
 
 	if (ParticlesOnDeath)
 	{
@@ -78,12 +81,14 @@ void AEnemy::Tick(float DeltaTime)
 
 void AEnemy::TakeDamage(float Damage)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Took %f damage"), Damage);
-	HitPoints -= Damage;
-
-	if (HitPoints <= 0.f)
+	if (!bIsInvincible)
 	{
-		SequenceDestroy();
+		HitPoints -= Damage;
+
+		if (HitPoints <= 0.f)
+		{
+			SequenceDestroy();
+		}
 	}
 }
 
@@ -91,6 +96,12 @@ void AEnemy::SetHealthModificator(float Modificator)
 {
 	HealthModificator *= Modificator;
 	HitPoints *= Modificator;
+}
+
+void AEnemy::UpgradeToLevel(int32 Level)
+{
+	// Health increase depending on the level
+	SetHealthModificator(0.1f*Level + 1.f); // 10% for level
 }
 
 

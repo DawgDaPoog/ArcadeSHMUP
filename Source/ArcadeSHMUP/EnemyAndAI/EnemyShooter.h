@@ -14,8 +14,8 @@ class ARCADESHMUP_API AEnemyShooter : public AEnemy
 {
 	GENERATED_BODY()
 
-	UPROPERTY(Category = Shooting, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<class AProjectile> ProjectileToShoot;
+	UPROPERTY(Category = Shooting, EditDefaultsOnly, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class AEnemyProjectile> ProjectileToShoot;
 public:
 	AEnemyShooter();
 
@@ -34,4 +34,6 @@ private:
 
 	// Max velocity possible
 	float MaximumVelocity;
+
+	float ProjectileSpeedModificator = 1.f;
 };

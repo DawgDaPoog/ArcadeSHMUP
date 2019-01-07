@@ -5,7 +5,7 @@
 
 AEnemyShooterAI::AEnemyShooterAI()
 {
-	ShootingDelay = 2.f;
+	ShootingDelay =  4.5f;
 }
 
 void AEnemyShooterAI::Possess(APawn * InPawn)
@@ -18,7 +18,7 @@ void AEnemyShooterAI::Possess(APawn * InPawn)
 
 void AEnemyShooterAI::CallShootAt(FVector Location)
 {
-	// EnemyClassPawn->ShootAt(Location);
+	EnemyClassPawn->ShootAt(Location);
 }
 
 void AEnemyShooterAI::SetForceTo(FVector Location)

@@ -25,6 +25,20 @@ void ADebree::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Make it briefly invulnurable if it is a secondary spawn
+	if (bIsSecondarySpawn)
+	{
+		bIsInvincible = true;
+
+		FTimerHandle TimerHandle;
+		FTimerDelegate TimerDelegate;
+		TimerDelegate.BindLambda([this]()
+		{
+			bIsInvincible = false;
+		});
+
+		GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, 0.1f, false);
+	}
 	Mesh->SetPhysicsLinearVelocity(FMath::VRand().GetSafeNormal()*500.f);
 	Mesh->SetPhysicsAngularVelocityInDegrees(FMath::VRand().GetSafeNormal()*FMath::RandRange(0.f,10.f));
 }
@@ -39,7 +53,6 @@ void ADebree::SequenceDestroy()
 			ADebree* DebreeActor = GetWorld()->SpawnActorDeferred<ADebree>(Debree, DebreeTransform);
 			DebreeActor->HitPoints = HitPoints / 3;
 			DebreeActor->bIsSecondarySpawn = true;
-			//DebreeActor->NotifyGameModeOfEnemySpawned();
 			DebreeActor->FinishSpawning(DebreeTransform);
 		}
 	}
@@ -58,8 +71,5 @@ void ADebree::Tick(float DeltaTime)
 	}
 }
 
-void ADebree::Die()
-{
-	
-}
+
 

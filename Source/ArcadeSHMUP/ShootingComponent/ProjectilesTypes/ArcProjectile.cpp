@@ -29,7 +29,6 @@ void AArcProjectile::NotifyActorBeginOverlap(AActor * OtherActor)
 	// Emmit the praticles to the enemy before dealing damage to him
 	if (OtherActor->ActorHasTag("Enemy"))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Initiating Particle Effects To Enemy"));
 		EmmitParticleEffectsTo(OtherActor);
 	}
 

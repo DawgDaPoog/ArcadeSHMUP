@@ -2,11 +2,13 @@
 
 #include "EnemyShooter.h"
 #include "Components/StaticMeshComponent.h"
+#include "EnemyProjectile.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "ArcadeSHMUPGameMode.h"
 
 AEnemyShooter::AEnemyShooter()
 {
-	HitPoints = 30.f;
+	HitPoints = 15.f;
 
 	WeaponDropPriority = 1;
 
@@ -20,7 +22,6 @@ AEnemyShooter::AEnemyShooter()
 void AEnemyShooter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 
 	FRotator NewRot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), ForceVectorNormal);
 
@@ -47,6 +48,19 @@ void AEnemyShooter::Tick(float DeltaTime)
 void AEnemyShooter::ShootAt(FVector Location)
 {
 	// Spawn a projectile and set it's rotation to fit
+	if (ProjectileToShoot)
+	{
+		FVector SpawnLocation = GetActorLocation();
+		SpawnLocation.Z = 260.f;
+
+		FRotator SpawnRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Location);
+
+		FTransform TransformToSpawn = FTransform(SpawnRotation, SpawnLocation, FVector(1.f));
+
+		AEnemyProjectile* Projectile = GetWorld()->SpawnActorDeferred<AEnemyProjectile>(ProjectileToShoot, TransformToSpawn);
+		Projectile->SetProjectileSpeedModificator(ProjectileSpeedModificator);
+		Projectile->FinishSpawning(TransformToSpawn);
+	}
 }
 
 void AEnemyShooter::SetForceVectorTo(FVector Location)

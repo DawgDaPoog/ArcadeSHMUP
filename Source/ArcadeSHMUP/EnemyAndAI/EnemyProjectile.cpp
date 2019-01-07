@@ -23,12 +23,6 @@ AEnemyProjectile::AEnemyProjectile()
 	Particles->bAutoActivate = true;
 }
 
-// Called when the game starts or when spawned
-void AEnemyProjectile::BeginPlay()
-{
-	Super::BeginPlay();
-	
-}
 
 void AEnemyProjectile::NotifyActorBeginOverlap(AActor * OtherActor)
 {
@@ -44,6 +38,11 @@ void AEnemyProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	SetActorLocation(GetActorLocation() + GetActorForwardVector()*ProjectileInitialSpeed*DeltaTime);
+}
 
+void AEnemyProjectile::SetProjectileSpeedModificator(float Modificator)
+{
+	ProjectileInitialSpeed *= Modificator;
 }
 

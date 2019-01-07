@@ -6,7 +6,7 @@
 
 AEnemySuicider::AEnemySuicider()
 {
-	HitPoints = 15.f;
+	HitPoints = 25.f;
 
 	PointsAwardedOnKill = 50;
 

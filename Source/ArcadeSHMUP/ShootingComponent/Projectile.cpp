@@ -45,7 +45,6 @@ void AProjectile::Move(float DeltaTime)
 {
 	SetActorLocation(GetActorLocation() + GetActorForwardVector()*ProjectileCurrentSpeed*DeltaTime);
 
-
 	if (ProjectileCurrentSpeed >= ProjectileMaxSpeed)
 	{
 		ProjectileCurrentSpeed = ProjectileMaxSpeed;
