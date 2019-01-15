@@ -10,6 +10,8 @@ AEnemyShooter::AEnemyShooter()
 {
 	HitPoints = 15.f;
 
+	PointsAwardedOnKill = 40;
+
 	WeaponDropPriority = 1;
 
 	ForceVectorNormal = FVector();

@@ -25,6 +25,8 @@ void ADebree::BeginPlay()
 {
 	Super::BeginPlay();
 
+	InitialHitPoints = HitPoints;
+
 	// Make it briefly invulnurable if it is a secondary spawn
 	if (bIsSecondarySpawn)
 	{
@@ -47,11 +49,11 @@ void ADebree::SequenceDestroy()
 {
 	if (!bIsSecondarySpawn && Debree)
 	{
-		for (int i = 0; i <= FMath::RandRange(3, 6); i++)
+		for (int i = 0; i <= FMath::RandRange(2, 4); i++)
 		{
 			FTransform DebreeTransform = FTransform(FRotator(FMath::RandRange(0.f, 360.f), FMath::RandRange(0.f, 360.f), FMath::RandRange(0.f, 360.f)), GetActorLocation(), FVector(FMath::RandRange(0.2f, 0.5f), FMath::RandRange(0.2f, 0.5f), 1.f));
 			ADebree* DebreeActor = GetWorld()->SpawnActorDeferred<ADebree>(Debree, DebreeTransform);
-			DebreeActor->HitPoints = HitPoints / 3;
+			DebreeActor->HitPoints = InitialHitPoints / 3;
 			DebreeActor->bIsSecondarySpawn = true;
 			DebreeActor->FinishSpawning(DebreeTransform);
 		}
