@@ -6,6 +6,7 @@
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/Blackboard/BlackboardKeyAllTypes.h"
+#include "GameFramework/Pawn.h"
 
 AEnemyAIBase::AEnemyAIBase()
 {
@@ -34,4 +35,9 @@ void AEnemyAIBase::Possess(APawn * InPawn)
 
 		BehaviorComp->StartTree(*Pawn->BehaviorTree);
 	}
+}
+
+APawn* AEnemyAIBase::GetPossessedPawn()
+{
+	return Pawn;
 }

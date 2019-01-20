@@ -18,4 +18,7 @@ class ARCADESHMUP_API UBTTask_BlinkerEnemyBlink : public UBTTask_BlackboardBase
 
 	// Function to check if we have any collision where we are trying to teleport
 	bool CanTeleportToLocation(FVector Location);
+
+	// Function that generates a random location in a given square that does not collide with anything
+	FVector GenerateLocationIn(FVector BottomLeft, FVector TopRight);
 };

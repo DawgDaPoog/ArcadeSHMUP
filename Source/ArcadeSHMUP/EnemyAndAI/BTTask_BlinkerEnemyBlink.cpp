@@ -14,15 +14,106 @@ EBTNodeResult::Type UBTTask_BlinkerEnemyBlink::ExecuteTask(UBehaviorTreeComponen
 	AEnemyBlinkerAI* EnemyAI = Cast<AEnemyBlinkerAI>(OwnerComp.GetAIOwner());
 	APawn* Player = Cast<APawn>(OwnerComp.GetBlackboardComponent()->GetValue<UBlackboardKeyType_Object>(EnemyAI->EnemyKeyID));
 
+	if (!Player)
+	{
+		return EBTNodeResult::Succeeded;
+	}
+	
 	FVector LocationToSpawnTo;
 
-	// Generate random place to teleport to untill we get a proper one or untill we are out of attempts to find one
-	int attempts = 0;
-	do
+	
+	if (EnemyAI->GetPossessedPawn())
 	{
-		LocationToSpawnTo = FVector(FMath::RandRange(-850.f, 850.f), FMath::RandRange(-1550.f, 1550.f), 260.f);
-		attempts++;
-	} while (!CanTeleportToLocation(LocationToSpawnTo) && attempts <= 20);
+		FVector EnemyLocation = EnemyAI->GetOwnerPosition();
+
+		// If player and blinker are both on the same side of the field
+		if ((Player->GetActorLocation().Y > 0.f && EnemyLocation.Y > 0.f) || (Player->GetActorLocation().Y < 0.f && EnemyLocation.Y < 0.f))
+		{
+			// Jump diagonally
+			if (EnemyLocation.X < 0)
+			{
+				if (EnemyLocation.Y > 0)
+				{
+					LocationToSpawnTo = GenerateLocationIn(FVector(0.f, -1550.f, 0.f), FVector(850.f, 0.f, 0.f)); // Top Left
+				}
+				else
+				{
+					LocationToSpawnTo = GenerateLocationIn(FVector(0.f), FVector(850.f, 1550.f, 0.f)); // Top Right
+				}
+			}
+			else
+			{
+				if (EnemyLocation.Y > 0)
+				{
+					LocationToSpawnTo = GenerateLocationIn(FVector(-850.f, -1550.f, 0.f), FVector(0.f)); // Bottow Left
+				}
+				else
+				{
+					LocationToSpawnTo = GenerateLocationIn(FVector(-850.f, 0.f, 0.f), FVector(0.f, 1550.f, 0.f)); // Bottom Right
+				}
+			}
+		}
+		else
+		{
+			// Jump Horrizontally or Vertically
+			bool CoinFlip = FMath::RandRange(0, 1);
+
+			if (CoinFlip) // Jump Vertically
+			{
+				if (EnemyLocation.X < 0)
+				{
+					if (EnemyLocation.Y > 0)
+					{
+						LocationToSpawnTo = GenerateLocationIn(FVector(0.f), FVector(850.f, 1550.f, 0.f)); // Top Right
+					}
+					else
+					{
+						LocationToSpawnTo = GenerateLocationIn(FVector(0.f, -1550.f, 0.f), FVector(850.f, 0.f, 0.f)); // Top Left
+					}
+				}
+				else
+				{
+					if (EnemyLocation.Y > 0)
+					{
+						LocationToSpawnTo = GenerateLocationIn(FVector(-850.f, 0.f, 0.f), FVector(0.f, 1550.f, 0.f)); // Bottom Right
+					}
+					else
+					{
+						LocationToSpawnTo = GenerateLocationIn(FVector(-850.f, -1550.f, 0.f), FVector(0.f)); // Bottow Left
+					}
+				}
+			}
+			else // Jump Horrizontally
+			{
+				if (EnemyLocation.X < 0)
+				{
+					if (EnemyLocation.Y > 0)
+					{
+						LocationToSpawnTo = GenerateLocationIn(FVector(-850.f, -1550.f, 0.f), FVector(0.f)); // Bottow Left
+					}
+					else
+					{
+						LocationToSpawnTo = GenerateLocationIn(FVector(-850.f, 0.f, 0.f), FVector(0.f, 1550.f, 0.f)); // Bottom Right
+					}
+				}
+				else
+				{
+					if (EnemyLocation.Y > 0)
+					{
+						LocationToSpawnTo = GenerateLocationIn(FVector(0.f, -1550.f, 0.f), FVector(850.f, 0.f, 0.f)); // Top Left
+					}
+					else
+					{
+						LocationToSpawnTo = GenerateLocationIn(FVector(0.f), FVector(850.f, 1550.f, 0.f)); // Top Right
+					}
+				}
+			}
+		}
+	}
+	else
+	{
+		LocationToSpawnTo = GenerateLocationIn(FVector(-850.f, -1550.f, 0.f), FVector(850.f, 1550.f, 0.f));
+	}
 
 	// If we couldn't find location to teleport to, bail out
 	if (!CanTeleportToLocation(LocationToSpawnTo))
@@ -31,10 +122,7 @@ EBTNodeResult::Type UBTTask_BlinkerEnemyBlink::ExecuteTask(UBehaviorTreeComponen
 	}
 
 	// If we didn't have a player found, bail out
-	//if (!Player)
-	//{
-	//	return EBTNodeResult::Succeeded;
-	//}
+	
 
 	// If we have a proper AI class, tell it ti teleport
 	if (EnemyAI)
@@ -79,5 +167,18 @@ bool UBTTask_BlinkerEnemyBlink::CanTeleportToLocation(FVector Location)
 	}
 	
 	return true;
+}
+
+FVector UBTTask_BlinkerEnemyBlink::GenerateLocationIn(FVector BottomLeft, FVector TopRight)
+{
+	FVector LocationToSpawnTo;
+	// Generate random place to teleport to untill we get a proper one or untill we are out of attempts to find one
+	int attempts = 0;
+	do
+	{
+		LocationToSpawnTo = FVector(FMath::RandRange(BottomLeft.X, TopRight.X), FMath::RandRange(BottomLeft.Y, TopRight.Y), 260.f);
+		attempts++;
+	} while (!CanTeleportToLocation(LocationToSpawnTo) && attempts <= 20);
+	return LocationToSpawnTo;
 }
 

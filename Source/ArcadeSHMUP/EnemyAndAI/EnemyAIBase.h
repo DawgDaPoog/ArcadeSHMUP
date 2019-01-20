@@ -30,4 +30,6 @@ public:
 	FVector GetOwnerPosition();
 
 	virtual void Possess(APawn *InPawn) override;
+
+	class APawn* GetPossessedPawn();
 };

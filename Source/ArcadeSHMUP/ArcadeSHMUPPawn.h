@@ -115,6 +115,7 @@ private:
 	//Damage System Interface
 	bool bIsInvincible = false;
 
+	// Health that is left
 	int32 HowMuchHPLeft = 3;
 
 	
@@ -125,5 +126,9 @@ public:
 	FORCEINLINE class UCameraComponent* GetCameraComponent() const { return CameraComponent; }
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+	
+
+	UFUNCTION(BlueprintCallable, Category = "Health")
+	FORCEINLINE int32 GetRemainingHealth() const { return HowMuchHPLeft; }
 };
 
