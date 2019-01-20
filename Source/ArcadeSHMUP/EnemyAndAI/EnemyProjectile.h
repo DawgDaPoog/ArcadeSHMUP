@@ -26,6 +26,9 @@ protected:
 
 	float ProjectileInitialSpeed = 500.f;
 
+	bool bIsMoving = true;
+
+	class UParticleSystemComponent* GetParticles() const;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

@@ -4,20 +4,35 @@
 #include "Components/StaticMeshComponent.h"
 #include "Materials/Material.h"
 #include "ArcadeSHMUPPawn.h"
+#include "Particles/ParticleSystemComponent.h"
 
 ABlinkerRay::ABlinkerRay()
 {
 	Ray = CreateDefaultSubobject<UStaticMeshComponent>(FName("Ray"));
+	Ray->SetupAttachment(RootComponent);
 	Ray->SetCollisionProfileName(FName("OverlapAll"));
 	Ray->SetGenerateOverlapEvents(true);
 	Ray->SetConstraintMode(EDOFMode::XYPlane);
 
 	ProjectileInitialSpeed = 0.f;
-
 }
+
+void ABlinkerRay::BeginPlay()
+{
+	Super::BeginPlay();
+
+	GetParticles()->Deactivate();
+
+	Ray->SetMaterial(0, InactiveMaterial);
+	bIsMoving = false;
+}
+
 
 void ABlinkerRay::ActivateRay()
 {
+	// Activate particles
+	GetParticles()->Activate();
+
 	// Set ray state to active
 	bIsRayActive = true;
 
@@ -35,13 +50,6 @@ void ABlinkerRay::ActivateRay()
 			Cast<AArcadeSHMUPPawn>(Actor)->TakeDamage();
 		}
 	}
-}
-
-void ABlinkerRay::BeginPlay()
-{
-	Super::BeginPlay();
-
-	Ray->SetMaterial(0, InactiveMaterial);
 }
 
 void ABlinkerRay::NotifyActorBeginOverlap(AActor * OtherActor)

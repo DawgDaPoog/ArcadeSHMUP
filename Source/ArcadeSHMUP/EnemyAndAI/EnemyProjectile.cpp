@@ -26,6 +26,8 @@ AEnemyProjectile::AEnemyProjectile()
 
 void AEnemyProjectile::NotifyActorBeginOverlap(AActor * OtherActor)
 {
+	Super::NotifyActorBeginOverlap(OtherActor);
+
 	if (OtherActor->ActorHasTag("Player"))
 	{
 		Cast<AArcadeSHMUPPawn>(OtherActor)->TakeDamage();
@@ -33,12 +35,20 @@ void AEnemyProjectile::NotifyActorBeginOverlap(AActor * OtherActor)
 	}
 }
 
+UParticleSystemComponent * AEnemyProjectile::GetParticles() const
+{
+	return Particles;
+}
+
 // Called every frame
 void AEnemyProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	SetActorLocation(GetActorLocation() + GetActorForwardVector()*ProjectileInitialSpeed*DeltaTime);
+	if (bIsMoving)
+	{
+		SetActorLocation(GetActorLocation() + GetActorForwardVector()*ProjectileInitialSpeed*DeltaTime);
+	}
 }
 
 void AEnemyProjectile::SetProjectileSpeedModificator(float Modificator)

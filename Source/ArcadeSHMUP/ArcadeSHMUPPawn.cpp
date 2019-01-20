@@ -140,14 +140,17 @@ void AArcadeSHMUPPawn::BeginPlay()
 
 	if (ShootingComponent)
 	{
+		// Spawn a random weapon from the list of starting weapons
 		int RandWeaponIndex = FMath::RandRange(0, 2);
 		if (RandWeaponIndex == 2)
 		{
 			RandWeaponIndex = 3;
 		}
 		ShootingComponent->OnWeaponPickup(RandWeaponIndex);
-		//ShootingComponent->OnWeaponPickup(5);
-
+		ShootingComponent->OnWeaponPickup(5);
+		ShootingComponent->OnWeaponPickup(4);
+		ShootingComponent->OnWeaponPickup(3);
+		ShootingComponent->OnWeaponPickup(2);
 	}
 }
 

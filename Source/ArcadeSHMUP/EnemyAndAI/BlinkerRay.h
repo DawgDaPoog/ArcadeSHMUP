@@ -16,7 +16,7 @@ class ARCADESHMUP_API ABlinkerRay : public AEnemyProjectile
 
 	ABlinkerRay();
 
-	UPROPERTY(Category = Ray, EditDefaultsOnly, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ray", meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* Ray;
 	
 	UPROPERTY(Category = Materials, EditDefaultsOnly, meta = (AllowPrivateAccess = "true"))

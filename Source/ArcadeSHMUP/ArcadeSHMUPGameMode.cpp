@@ -14,6 +14,7 @@
 #include "GameFramework/PlayerController.h"
 #include "Drops/DropManager.h"
 #include "Drops/Drop.h"
+#include "EnemyAndAI/EnemyProjectile.h"
 
 AArcadeSHMUPGameMode::AArcadeSHMUPGameMode()
 {
@@ -33,11 +34,11 @@ AArcadeSHMUPGameMode::AArcadeSHMUPGameMode()
 	Intencity = 1;
 
 	// Default setup for first wave of enemy spawning
-	WaveSpawnSimpleMin = 2;
-	WaveSpawnSimpleMax = 4;
+	WaveSpawnSimpleMin = 0;
+	WaveSpawnSimpleMax = 0;
 
-	WaveSpawnAverageMin = 0;
-	WaveSpawnAverageMax = 0;
+	WaveSpawnAverageMin = 1;
+	WaveSpawnAverageMax = 1;
 
 	WaveSpawnAdvancedMin = 0;
 	WaveSpawnAdvancedMax = 0;
@@ -137,6 +138,18 @@ void AArcadeSHMUPGameMode::StartNewGameCycle(FString SaveFileName)
 		if (Drop)
 		{
 			Drop->Destroy();
+		}
+	}
+
+	// Find all lingering projectiles in the area
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemyProjectile::StaticClass(), FoundActors);
+
+	// Destroy all lingering projectiles
+	for (auto Projectile : FoundActors)
+	{
+		if (Projectile)
+		{
+			Projectile->Destroy();
 		}
 	}
 

@@ -25,8 +25,8 @@ protected:
 	UPROPERTY(Category = Mesh, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		class UStaticMeshComponent* Mesh;
 
-	// Particles
-	UPROPERTY(Category = ParticleEffects, EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	// Particles when enemy dies
+	UPROPERTY(Category = Particles, EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		class UParticleSystem* ParticlesOnDeath;
 
 	// Checking if we hit a player. If we did, react with ReactToPlayer
@@ -78,7 +78,7 @@ public:
 		class UBehaviorTree* BehaviorTree;
 	
 	// Is called when enemy takes damage and determines if enemy has died with the amount of taken damage or not
-	void TakeDamage(float Damage);
+	virtual void TakeDamage(float Damage);
 
 	// 
 	FEnemyDelegate OnDeath;
