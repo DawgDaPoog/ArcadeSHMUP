@@ -14,8 +14,7 @@ class ARCADESHMUP_API AEnemySuicider : public AEnemy
 {
 	GENERATED_BODY()
 
-	AEnemySuicider();
-
+protected:
 	virtual void Tick(float DeltaTime) override;
 
 	FVector VectorNormalToPlayer;
@@ -27,6 +26,10 @@ class ARCADESHMUP_API AEnemySuicider : public AEnemy
 	float MaximumVelocity = 700.f;
 
 	virtual void ReactToPlayer(class AArcadeSHMUPPawn* Player) override;
+
 public:
+
+	AEnemySuicider();
+
 	void SetForceVectorTo(FVector PlayerLocation);
 };

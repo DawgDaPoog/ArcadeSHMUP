@@ -55,7 +55,7 @@ void AEnemy::NotifyActorBeginOverlap(AActor * OtherActor)
 
 void AEnemy::ReactToPlayer(AArcadeSHMUPPawn * Player)
 {
-	// Take damage when reacting to a player
+	// Deal damage when reacting to a player
 	Player->TakeDamage();
 }
 

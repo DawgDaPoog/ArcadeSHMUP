@@ -16,9 +16,9 @@ AEnemyBlinker::AEnemyBlinker()
 {
 	HitPoints = 60.f;
 
-	WeaponDropPriority = 2;
+	WeaponDropPriority = 3;
 
-	PointsAwardedOnKill = 100;
+	PointsAwardedOnKill = 200;
 }
 
 void AEnemyBlinker::BeginPlay()

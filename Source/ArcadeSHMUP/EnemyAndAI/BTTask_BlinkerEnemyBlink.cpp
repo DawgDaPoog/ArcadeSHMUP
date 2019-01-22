@@ -120,8 +120,6 @@ EBTNodeResult::Type UBTTask_BlinkerEnemyBlink::ExecuteTask(UBehaviorTreeComponen
 	{
 		return EBTNodeResult::Succeeded;
 	}
-
-	// If we didn't have a player found, bail out
 	
 
 	// If we have a proper AI class, tell it ti teleport
@@ -172,7 +170,8 @@ bool UBTTask_BlinkerEnemyBlink::CanTeleportToLocation(FVector Location)
 FVector UBTTask_BlinkerEnemyBlink::GenerateLocationIn(FVector BottomLeft, FVector TopRight)
 {
 	FVector LocationToSpawnTo;
-	// Generate random place to teleport to untill we get a proper one or untill we are out of attempts to find one
+
+	// Generate random place to teleport to in the given bounds untill we get a proper one or untill we are out of attempts to find one
 	int attempts = 0;
 	do
 	{

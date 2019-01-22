@@ -19,8 +19,7 @@ EBTNodeResult::Type UMyBTTask_SuiciderMoveToPlayer::ExecuteTask(UBehaviorTreeCom
 	APawn* Player = Cast<APawn>(OwnerComp.GetBlackboardComponent()->GetValue<UBlackboardKeyType_Object>(EnemyAI->EnemyKeyID));
 	if (Player)
 	{
-		FVector DirectionVector = Player->GetActorLocation() - EnemyAI->GetOwnerPosition();
-		FVector Direction = DirectionVector;
+		FVector Direction = Player->GetActorLocation() - EnemyAI->GetOwnerPosition();
 
 		EnemyAI->SetPerTickVectorValueTowards(Direction);
 	}
