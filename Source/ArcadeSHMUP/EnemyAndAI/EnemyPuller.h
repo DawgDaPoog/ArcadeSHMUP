@@ -17,14 +17,20 @@ class ARCADESHMUP_API AEnemyPuller : public AEnemySuicider
 	UPROPERTY(EditDefaultsOnly, Category = "Pull", meta = (AllowPrivateAccess = "true"))
 	float PullForce = 100000.f;
 
-	UPROPERTY(EditDefaultsOnly, Categoy = "Pull", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, Category = "Pull", meta = (AllowPrivateAccess = "true"))
 	class UParticleSystem* ParticlesAtPull;
 
+	class APawn* FocusedOnPlayer;
 public:
 	AEnemyPuller();
 
-	void PullTowardsSelf(AArcadeSHMUPPawn* Player);
+	virtual void Tick(float DeltaTime) override;
+
+	void PullTowardsSelf(APawn* Player, float ForceModificator);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Visual")
 	void EmmitParticleEffectsTo(const AActor* Actor);
+
+protected:
+	virtual void ReactToPlayer(class AArcadeSHMUPPawn* Player) override;
 };
