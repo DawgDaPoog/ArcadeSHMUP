@@ -41,12 +41,13 @@ void UShootingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 void UShootingComponent::OnWeaponPickup(int32 WeaponIndex)
 {
 	//	UE_LOG(LogTemp, Warning, TEXT("Went in the OnPickupWeapon"));
-	SequencePickupWeapon(WeaponIndex);
+	CurrentGameMode->SendPlayerAMessage(SequencePickupWeapon(WeaponIndex));
 }
 
-void UShootingComponent::SequencePickupWeapon(const int32 &WeaponNumber)
+FString& UShootingComponent::SequencePickupWeapon(const int32 &WeaponNumber)
 {
 	//	UE_LOG(LogTemp, Warning, TEXT("Went in the Sequence"));
+	
 
 	//Figure out what kind of weapon we need to spawn or upgrade depending on a weapon number
 	TSubclassOf<AWeapon> WeaponToSpawn;
@@ -81,7 +82,10 @@ void UShootingComponent::SequencePickupWeapon(const int32 &WeaponNumber)
 		WeaponToSpawn = Arc;
 		WeaponType = FName("Arc");
 	}
-	else return;
+	else {
+		MessageToSend = "Error, no such weapon type exists";
+		return MessageToSend;
+	}
 
 	//Figure out how many weapons of such time was already spawned
 	int32 HowManyHasAlreadyBeenSpawned = CheckAmountOfSpawnedByType(WeaponType);
@@ -106,8 +110,8 @@ void UShootingComponent::SequencePickupWeapon(const int32 &WeaponNumber)
 		NewReference.Weapon->OnFire.AddUniqueDynamic(this, &UShootingComponent::ReactOnWeaponFire);
 
 		//Message to the player that we have added another weapon to his arsenal
-		FString MessageToSend = "You have picked up " + WeaponType.ToString()+ "!";
-		CurrentGameMode->SendPlayerAMessage(MessageToSend);
+		MessageToSend = "You have picked up " + WeaponType.ToString()+ "!";
+		return MessageToSend;
 	}
 	else
 	{
@@ -121,9 +125,10 @@ void UShootingComponent::SequencePickupWeapon(const int32 &WeaponNumber)
 			}
 		}
 		//Message to the player that we have upgraded his weapons
-		FString MessageToSend = "You have upgraded your " + WeaponType.ToString()+"s!";
-		CurrentGameMode->SendPlayerAMessage(MessageToSend);
+		MessageToSend = "You have upgraded your " + WeaponType.ToString()+"s!";
+		return MessageToSend;
 	}
+	
 }
 
 int32 UShootingComponent::CheckAmountOfSpawnedByType(FName Type)

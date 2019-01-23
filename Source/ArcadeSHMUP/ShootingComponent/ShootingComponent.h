@@ -59,7 +59,7 @@ public:
 
 	// Called when we pick up a weapon
 	void OnWeaponPickup(int32 WeaponIndex);
-	void SequencePickupWeapon( const int32 &WeaponNumber);
+	FString& SequencePickupWeapon( const int32 &WeaponNumber);
 	int32 CheckAmountOfSpawnedByType(FName Type);
 	// 0 - shotgun, 1 - Machinegun, 2 - Rifle, 3 - Lazer, 4 - Rocket, 5 - Arc
 	
@@ -82,4 +82,6 @@ private:
 	// Pointer to the current game mode
 	class AArcadeSHMUPGameMode* CurrentGameMode;
 
+	// Latest message that we need to send to player
+	FString MessageToSend;
 };

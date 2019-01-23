@@ -34,11 +34,11 @@ AArcadeSHMUPGameMode::AArcadeSHMUPGameMode()
 	Intencity = 1;
 
 	// Default setup for first wave of enemy spawning
-	WaveSpawnSimpleMin = 0;
-	WaveSpawnSimpleMax = 0;
+	WaveSpawnSimpleMin = 5;
+	WaveSpawnSimpleMax = 5;
 
-	WaveSpawnAverageMin = 1;
-	WaveSpawnAverageMax = 1;
+	WaveSpawnAverageMin = 0;
+	WaveSpawnAverageMax = 0;
 
 	WaveSpawnAdvancedMin = 0;
 	WaveSpawnAdvancedMax = 0;
@@ -105,18 +105,17 @@ void AArcadeSHMUPGameMode::StartNewGameCycle(FString SaveFileName)
 	// Array to help find actors in level 
 	TArray<AActor*> FoundActors;
 
-	// Finding All Enemies in level
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemy::StaticClass(), FoundActors);
+	// Find all lingering drops in the area
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ADrop::StaticClass(), FoundActors);
 
-	// Destroying Every Single one of Enemies
-	for (auto Enemy : FoundActors)
+	// Destroy all lingering drops
+	for (auto Drop : FoundActors)
 	{
-		if (Enemy)
+		if (Drop)
 		{
-			Enemy->Destroy();
+			Drop->Destroy();
 		}
 	}
-
 	// Find all the lingering SpawnerActor's
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASpawnerActor::StaticClass(), FoundActors);
 
@@ -129,17 +128,21 @@ void AArcadeSHMUPGameMode::StartNewGameCycle(FString SaveFileName)
 		}
 	}
 
-	// Find all lingering drops in the area
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ADrop::StaticClass(), FoundActors);
+	// Finding All Enemies in level
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemy::StaticClass(), FoundActors);
 
-	// Destroy all lingering drops
-	for (auto Drop : FoundActors)
+	// Destroying Every Single one of Enemies
+	for (auto Enemy : FoundActors)
 	{
-		if (Drop)
+		if (Enemy)
 		{
-			Drop->Destroy();
+			Enemy->Destroy();
 		}
 	}
+
+	
+
+	
 
 	// Find all lingering projectiles in the area
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemyProjectile::StaticClass(), FoundActors);

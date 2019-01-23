@@ -146,11 +146,11 @@ void AArcadeSHMUPPawn::BeginPlay()
 		{
 			RandWeaponIndex = 3;
 		}
-		ShootingComponent->OnWeaponPickup(RandWeaponIndex);
-		ShootingComponent->OnWeaponPickup(5);
-		ShootingComponent->OnWeaponPickup(4);
-		ShootingComponent->OnWeaponPickup(3);
-		ShootingComponent->OnWeaponPickup(2);
+		ShootingComponent->SequencePickupWeapon(RandWeaponIndex);
+		ShootingComponent->SequencePickupWeapon(5);
+		ShootingComponent->SequencePickupWeapon(4);
+		ShootingComponent->SequencePickupWeapon(3);
+		ShootingComponent->SequencePickupWeapon(2);
 	}
 }
 
@@ -254,6 +254,7 @@ void AArcadeSHMUPPawn::TakeDamage()
 	{
 		Cast<AArcadeSHMUPGameMode>(GetWorld()->GetAuthGameMode())->EndGameCycle();
 		ShootingComponent->DestroyAllWeapons();
+		ShootingComponent->DestroyComponent();
 		Destroy();
 	}
 
