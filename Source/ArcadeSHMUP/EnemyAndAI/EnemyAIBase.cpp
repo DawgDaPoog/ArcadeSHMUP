@@ -31,7 +31,7 @@ void AEnemyAIBase::Possess(APawn * InPawn)
 	{
 		BlackboardComp->InitializeBlackboard(*Pawn->BehaviorTree->BlackboardAsset);
 
-		EnemyKeyID = BlackboardComp->GetKeyID("Target");
+		TargetKeyID = BlackboardComp->GetKeyID("Target");
 
 		BehaviorComp->StartTree(*Pawn->BehaviorTree);
 	}

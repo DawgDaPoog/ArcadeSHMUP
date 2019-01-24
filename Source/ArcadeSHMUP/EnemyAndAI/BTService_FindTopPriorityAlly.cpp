@@ -28,21 +28,21 @@ void UBTService_FindTopPriorityAlly::TickNode(UBehaviorTreeComponent & OwnerComp
 	// Find all lingering drops in the area
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemy::StaticClass(), FoundActors);
 
-	// Destroy all lingering drops
-	for (auto Enemy : FoundActors)
-	{
-		if (Drop)
-		{
-			Drop->Destroy();
-		}
-	}
+	//// Destroy all lingering drops
+	//for (auto Enemy : FoundActors)
+	//{
+	//	if (Drop)
+	//	{
+	//		Drop->Destroy();
+	//	}
+	//}
 
-	if (EnemyAI)
-	{
-		if (Enemy)
-		{
-			// Setting the player as the enemy for our AI
-			OwnerComp.GetBlackboardComponent()->SetValue<UBlackboardKeyType_Object>(EnemyAI->EnemyKeyID, Enemy);
-		}
-	}
+	//if (EnemyAI)
+	//{
+	//	if (Enemy)
+	//	{
+	//		// Setting the player as the enemy for our AI
+	//		OwnerComp.GetBlackboardComponent()->SetValue<UBlackboardKeyType_Object>(EnemyAI->TargetKeyID, Enemy);
+	//	}
+	//}
 }

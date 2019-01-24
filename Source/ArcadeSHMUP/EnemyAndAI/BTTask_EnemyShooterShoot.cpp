@@ -16,7 +16,7 @@ EBTNodeResult::Type UBTTask_EnemyShooterShoot::ExecuteTask(UBehaviorTreeComponen
 		return EBTNodeResult::Failed;
 	}
 
-	APawn* Player = Cast<APawn>(OwnerComp.GetBlackboardComponent()->GetValue<UBlackboardKeyType_Object>(EnemyAI->EnemyKeyID));
+	APawn* Player = Cast<APawn>(OwnerComp.GetBlackboardComponent()->GetValue<UBlackboardKeyType_Object>(EnemyAI->TargetKeyID));
 	if (Player)
 	{
 		EnemyAI->CallShootAt(Player->GetActorLocation());

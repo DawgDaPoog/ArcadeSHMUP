@@ -25,7 +25,7 @@ protected:
 
 	class AEnemy* Pawn;
 public:
-	uint8 EnemyKeyID;
+	uint8 TargetKeyID;
 
 	FVector GetOwnerPosition();
 

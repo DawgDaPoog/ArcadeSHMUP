@@ -17,7 +17,7 @@ EBTNodeResult::Type UBTTask_EnemyPullerPull::ExecuteTask(UBehaviorTreeComponent 
 		return EBTNodeResult::Failed;
 	}
 
-	APawn* Player = Cast<APawn>(OwnerComp.GetBlackboardComponent()->GetValue<UBlackboardKeyType_Object>(EnemyAI->EnemyKeyID));
+	APawn* Player = Cast<APawn>(OwnerComp.GetBlackboardComponent()->GetValue<UBlackboardKeyType_Object>(EnemyAI->TargetKeyID));
 	if (Player)
 	{
 		float Range = (EnemyAI->GetOwnerPosition() - Player->GetActorLocation()).Size();

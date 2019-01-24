@@ -27,7 +27,7 @@ void UBTService_CheckForPlayer::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 		if (Enemy)
 		{
 			// Setting the player as the enemy for our AI
-			OwnerComp.GetBlackboardComponent()->SetValue<UBlackboardKeyType_Object>(EnemyAI->EnemyKeyID, Enemy);
+			OwnerComp.GetBlackboardComponent()->SetValue<UBlackboardKeyType_Object>(EnemyAI->TargetKeyID, Enemy);
 		}
 	}
 }

@@ -16,7 +16,7 @@ EBTNodeResult::Type UMyBTTask_BallEnemyAIAttack::ExecuteTask(UBehaviorTreeCompon
 		return EBTNodeResult::Failed;
 	}
 
-	APawn* Player = Cast<APawn>(OwnerComp.GetBlackboardComponent()->GetValue<UBlackboardKeyType_Object>(EnemyAI->EnemyKeyID));
+	APawn* Player = Cast<APawn>(OwnerComp.GetBlackboardComponent()->GetValue<UBlackboardKeyType_Object>(EnemyAI->TargetKeyID));
 	if (Player)
 	{
 		FVector DirectionVector = Player->GetActorLocation() - EnemyAI->GetOwnerPosition();

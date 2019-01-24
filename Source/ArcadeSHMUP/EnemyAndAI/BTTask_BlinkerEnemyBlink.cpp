@@ -12,7 +12,7 @@
 EBTNodeResult::Type UBTTask_BlinkerEnemyBlink::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory)
 {
 	AEnemyBlinkerAI* EnemyAI = Cast<AEnemyBlinkerAI>(OwnerComp.GetAIOwner());
-	APawn* Player = Cast<APawn>(OwnerComp.GetBlackboardComponent()->GetValue<UBlackboardKeyType_Object>(EnemyAI->EnemyKeyID));
+	APawn* Player = Cast<APawn>(OwnerComp.GetBlackboardComponent()->GetValue<UBlackboardKeyType_Object>(EnemyAI->TargetKeyID));
 
 	if (!Player)
 	{
