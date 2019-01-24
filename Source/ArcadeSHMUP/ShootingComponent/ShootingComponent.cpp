@@ -22,9 +22,8 @@ UShootingComponent::UShootingComponent()
 void UShootingComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// ...
 	
+	// Finding current game mode and casting it to proper class
 	CurrentGameMode = Cast<AArcadeSHMUPGameMode>(GetWorld()->GetAuthGameMode());
 }
 
@@ -40,15 +39,12 @@ void UShootingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 
 void UShootingComponent::OnWeaponPickup(int32 WeaponIndex)
 {
-	//	UE_LOG(LogTemp, Warning, TEXT("Went in the OnPickupWeapon"));
+	// Sending player a message about what weapon he picked up and picking up the weapon
 	CurrentGameMode->SendPlayerAMessage(SequencePickupWeapon(WeaponIndex));
 }
 
 FString& UShootingComponent::SequencePickupWeapon(const int32 &WeaponNumber)
 {
-	//	UE_LOG(LogTemp, Warning, TEXT("Went in the Sequence"));
-	
-
 	//Figure out what kind of weapon we need to spawn or upgrade depending on a weapon number
 	TSubclassOf<AWeapon> WeaponToSpawn;
 	FName WeaponType;
@@ -156,6 +152,7 @@ void UShootingComponent::AttemptShooting()
 
 void UShootingComponent::DestroyAllWeapons()
 {
+	// Sycles through all the weapon arrows and destroys all the weapons attached
 	for (auto WeaponsArrow : WeaponsArrows)
 	{
 		WeaponsArrow.Weapon->Destroy();
@@ -164,6 +161,7 @@ void UShootingComponent::DestroyAllWeapons()
 
 void UShootingComponent::AdjustWeaponsPositions()
 {
+	// Sets weapons position and rotation in correspondense to their arrows every frame
 	for (auto WeaponArrow : WeaponsArrows)
 	{
 		WeaponArrow.Weapon->SetActorRotation(WeaponArrow.Arrow->GetComponentRotation());

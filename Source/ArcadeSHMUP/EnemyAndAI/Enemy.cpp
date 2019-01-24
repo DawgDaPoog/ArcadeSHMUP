@@ -29,6 +29,8 @@ AEnemy::AEnemy()
 void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	CurrentHitpoints = HitPoints;
 
 	CurrentGameMode = Cast<AArcadeSHMUPGameMode>(GetWorld()->GetAuthGameMode());
 
@@ -83,9 +85,9 @@ void AEnemy::TakeDamage(float Damage)
 {
 	if (!bIsInvincible)
 	{
-		HitPoints -= Damage;
+		CurrentHitpoints -= Damage;
 
-		if (HitPoints <= 0.f)
+		if (CurrentHitpoints <= 0.f)
 		{
 			SequenceDestroy();
 		}
@@ -102,6 +104,21 @@ void AEnemy::UpgradeToLevel(int32 Level)
 {
 	// Health increase depending on the level
 	SetHealthModificator(0.1f*Level + 1.f); // 10% for level
+}
+
+void AEnemy::RestoreHealth(float HealthToRestore)
+{
+	CurrentHitpoints = FMath::Clamp(CurrentHitpoints, 0.f, HitPoints);
+}
+
+void AEnemy::SetInvincibility(bool Value)
+{
+	bIsInvincible = Value;
+}
+
+int AEnemy::GetWeaponDropPriority()
+{
+	return WeaponDropPriority;
 }
 
 

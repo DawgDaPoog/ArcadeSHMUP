@@ -125,10 +125,14 @@ void AEnemyBlinker::InitialiseRayAt(FVector Location)
 void AEnemyBlinker::TakeDamage(float Damage)
 {
 	Super::TakeDamage(Damage);
-
-	if (MyController)
+	
+	// If we are not invincible, request the AI controller to blink
+	if (!bIsInvincible)
 	{
-		MyController->AskForBlink();
+		if (MyController)
+		{
+			MyController->AskForBlink();
+		}
 	}
 }
 

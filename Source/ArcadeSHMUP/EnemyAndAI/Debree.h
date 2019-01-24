@@ -23,8 +23,6 @@ protected:
 	virtual void BeginPlay() override;
 
 	virtual void SequenceDestroy() override;
-
-	float InitialHitPoints = HitPoints;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

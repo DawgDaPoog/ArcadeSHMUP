@@ -27,7 +27,7 @@ protected:
 
 	// Particles when enemy dies
 	UPROPERTY(Category = Particles, EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		class UParticleSystem* ParticlesOnDeath;
+	class UParticleSystem* ParticlesOnDeath;
 
 	// Checking if we hit a player. If we did, react with ReactToPlayer
 	virtual void NotifyHit(UPrimitiveComponent * MyComp, AActor * Other, UPrimitiveComponent * OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult & Hit) override;
@@ -39,8 +39,10 @@ protected:
 	virtual void ReactToPlayer(class AArcadeSHMUPPawn* Player);
 
 	// Enemy health
-	//UPROPERTY(EditAnywhere, meta = (BlueprintProtected = "true"))
 	float HitPoints = 0.f;
+
+	// EnemyCurrentHealth
+	float CurrentHitpoints = HitPoints;
 
 	// How much points do you get when killing this enemy
 	int PointsAwardedOnKill = 0;
@@ -86,4 +88,10 @@ public:
 	void SetHealthModificator(float Modificator);
 
 	virtual void UpgradeToLevel(int32 Level);
+
+	void RestoreHealth(float HealthToRestore);
+
+	void SetInvincibility(bool Value);
+
+	int GetWeaponDropPriority();
 };
