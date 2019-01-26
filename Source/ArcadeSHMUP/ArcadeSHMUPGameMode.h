@@ -66,6 +66,12 @@ private:
 	// Loads a game from a slot 0
 	void LoadGameSave();
 
+	//Function that increases intensity. Makes it so that more enemies of different types are spawned and increases their health
+	void IncreaseIntensity();
+
+	// Function to reset variables of possible spawns and health modificators
+	void ResetIntensity();
+
 	// Spawn points that are to be used to spawn new enemies
 	TArray<class ASpawnPoint*> SpawnPoints;
 
@@ -88,6 +94,7 @@ private:
 	int WaveSpawnAdvancedMax;
 
 	// Variables to calculate chances of dropping modification/weapon
+
 	const float InitialSimpleEnemyWeaponDropChance = 2.f;
 	float SimpleEnemyWeaponDropChance = InitialSimpleEnemyWeaponDropChance;
 
@@ -100,8 +107,11 @@ private:
 	// Health modificator for enemies that are spawned
 	float EnemyHealthModificator = 1.f;
 
-	// Intencity level that decides the amounts of spawns and their types
-	int Intencity;
+	// By how much the health modificator is increased by each level of intensity
+	float HealthModificatorPerIntensity;
+
+	// Intensity level that decides the amounts of spawns and their types
+	int Intensity;
 
 	// Spawning a wave of enemies (Telling the spawn points to attempt spawning)
 	void WaveSpawn();

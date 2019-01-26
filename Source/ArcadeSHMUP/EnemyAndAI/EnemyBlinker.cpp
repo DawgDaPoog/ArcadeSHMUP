@@ -46,11 +46,11 @@ void AEnemyBlinker::Tick(float DeltaTime)
 	}
 
 	// If we have a spawned ray, set it's location and rotation to that of it's owner
-	if (CurrentlySpawnedRay)
+	if (CurrentlySpawnedRay && this)
 	{
 		CurrentlySpawnedRay->SetActorLocation(GetActorLocation());
 	}
-	if (CurrentlySpawnedRay)
+	if (CurrentlySpawnedRay && this)
 	{
 		CurrentlySpawnedRay->SetActorRotation(GetActorRotation());
 	}

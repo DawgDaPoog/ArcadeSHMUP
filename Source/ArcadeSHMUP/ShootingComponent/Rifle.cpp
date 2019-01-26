@@ -21,7 +21,7 @@ AProjectile* ARifle::Fire()
 void ARifle::Upgrade()
 {
 	SetRateOfFireModificator(1.15f);
-	SetKnockBackForceModificator(1.1f);
+	SetKnockBackForceModificator(1.0001f);
 	SetDamageModificator(1.08f);
 	SetProjectileSpeedModificator(1.2f);
 }

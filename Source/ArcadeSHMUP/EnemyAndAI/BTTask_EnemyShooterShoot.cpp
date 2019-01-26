@@ -20,7 +20,6 @@ EBTNodeResult::Type UBTTask_EnemyShooterShoot::ExecuteTask(UBehaviorTreeComponen
 	if (Player)
 	{
 		EnemyAI->CallShootAt(Player->GetActorLocation());
-		UE_LOG(LogTemp, Warning, TEXT("%s shooting!"), *(OwnerComp.GetOwner()->GetName()))
 	}
 
 	return EBTNodeResult::Succeeded;

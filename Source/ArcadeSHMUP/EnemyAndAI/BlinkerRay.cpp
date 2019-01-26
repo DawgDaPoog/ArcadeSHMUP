@@ -31,6 +31,7 @@ void ABlinkerRay::BeginPlay()
 void ABlinkerRay::ActivateRay()
 {
 	// Activate particles
+	if(GetParticles())
 	GetParticles()->Activate();
 
 	// Set ray state to active

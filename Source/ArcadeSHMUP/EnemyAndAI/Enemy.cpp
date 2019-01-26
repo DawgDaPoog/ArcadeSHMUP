@@ -9,6 +9,9 @@
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleEmitter.h"
 #include "Particles/ParticleSystem.h"
+#include "EnemyShielder.h"
+#include "TimerManager.h"
+
 // Sets default values
 AEnemy::AEnemy()
 {
@@ -33,6 +36,10 @@ void AEnemy::BeginPlay()
 	CurrentHitpoints = HitPoints;
 
 	CurrentGameMode = Cast<AArcadeSHMUPGameMode>(GetWorld()->GetAuthGameMode());
+
+	FTimerHandle Handle;
+
+	GetWorldTimerManager().SetTimer(Handle, this, &AEnemy::CheckForInvincibility, 0.1f, true, 0.1f);
 
 	check(CurrentGameMode);
 }
@@ -72,6 +79,30 @@ void AEnemy::SequenceDestroy()
 	}
 
 	Destroy();
+}
+
+void AEnemy::CheckForInvincibility()
+{
+	TArray<AActor*> OverlappingActors;
+
+	GetOverlappingActors(OverlappingActors);
+
+	for (auto Actor : OverlappingActors)
+	{
+		if (Cast<AEnemyShielder>(Actor))
+		{
+			bIsInvincible = true;
+			return;
+		}
+	}
+	
+	bIsInvincible = false;
+
+	auto ActiveParticles = FindComponentByClass<UParticleSystemComponent>();
+	if (ActiveParticles)
+	{
+		ActiveParticles->DestroyComponent();
+	}
 }
 
 // Called every frame

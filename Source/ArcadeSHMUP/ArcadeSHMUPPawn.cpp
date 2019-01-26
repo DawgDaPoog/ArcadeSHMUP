@@ -147,10 +147,6 @@ void AArcadeSHMUPPawn::BeginPlay()
 			RandWeaponIndex = 3;
 		}
 		ShootingComponent->SequencePickupWeapon(RandWeaponIndex);
-		ShootingComponent->SequencePickupWeapon(5);
-		ShootingComponent->SequencePickupWeapon(4);
-		ShootingComponent->SequencePickupWeapon(3);
-		ShootingComponent->SequencePickupWeapon(2);
 	}
 }
 

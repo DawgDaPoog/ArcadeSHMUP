@@ -25,29 +25,29 @@ AArcadeSHMUPGameMode::AArcadeSHMUPGameMode()
 
 	if (PlayerFinder.Succeeded())
 	{
-		UE_LOG(LogTemp,Warning, TEXT(" Succeeded to find class"))
 		Player = PlayerFinder.Class;
 	}
 
 	// Default values for spawn frequency and wave intencity
-	SpawnFrequency = 5.f;
-	Intencity = 1;
+	SpawnFrequency = 10.f;
+	Intensity = 1;
 
 	// Default setup for first wave of enemy spawning
-	WaveSpawnSimpleMin = 5;
-	WaveSpawnSimpleMax = 5;
+	WaveSpawnSimpleMin = 1;
+	WaveSpawnSimpleMax = 3;
 
 	WaveSpawnAverageMin = 0;
 	WaveSpawnAverageMax = 0;
 
 	WaveSpawnAdvancedMin = 0;
 	WaveSpawnAdvancedMax = 0;
+
+	HealthModificatorPerIntensity = 0.05f;
 }
 
 void AArcadeSHMUPGameMode::BeginPlay()
 {
 	Super::BeginPlay();
-	// Create or Load a save file
 
 	// Create GameSave variable
 	GameSave = Cast<UScoreSystemSaveGame>(UGameplayStatics::CreateSaveGameObject(UScoreSystemSaveGame::StaticClass()));
@@ -77,7 +77,7 @@ void AArcadeSHMUPGameMode::BeginPlay()
 	GameSave->SortScores();
 
 	//Set a wave spawn timer
-	GetWorldTimerManager().SetTimer(WaveTimerHandle, this, &AArcadeSHMUPGameMode::WaveSpawn, 5.f, true, 5.f);
+	GetWorldTimerManager().SetTimer(WaveTimerHandle, this, &AArcadeSHMUPGameMode::WaveSpawn, SpawnFrequency, true, SpawnFrequency);
 }
 
 void AArcadeSHMUPGameMode::SaveGame()
@@ -88,6 +88,56 @@ void AArcadeSHMUPGameMode::SaveGame()
 void AArcadeSHMUPGameMode::LoadGameSave()
 {
 	GameSave = Cast<UScoreSystemSaveGame>(UGameplayStatics::LoadGameFromSlot(TEXT("0"), 0));
+}
+
+void AArcadeSHMUPGameMode::IncreaseIntensity()
+{
+	Intensity++;
+	EnemyHealthModificator += HealthModificatorPerIntensity;
+
+	if (Intensity == 6)
+	{
+		WaveSpawnSimpleMin += 1;
+		WaveSpawnSimpleMax += 2;
+	}
+	else if (Intensity == 10)
+	{
+		WaveSpawnAverageMin += 1;
+		WaveSpawnAverageMax += 2;
+	}
+	else if (Intensity == 14)
+	{
+		WaveSpawnSimpleMax += 2;
+		WaveSpawnAverageMax += 1;
+	}
+	else if (Intensity == 20)
+	{
+		WaveSpawnAdvancedMax += 1;
+	}
+	else if (Intensity % 10 == 0 && Intensity > 20)
+	{
+		WaveSpawnAdvancedMax += 1;
+	}
+	else if (Intensity % 5 == 0 && Intensity > 20)
+	{
+		WaveSpawnSimpleMax += 2;
+		WaveSpawnAverageMax += 1;
+	}
+}
+
+void AArcadeSHMUPGameMode::ResetIntensity()
+{
+	Intensity = 1;
+	EnemyHealthModificator = 1.f;
+
+	WaveSpawnAdvancedMax = 0;
+	WaveSpawnAdvancedMin = 0;
+
+	WaveSpawnAverageMax = 0;
+	WaveSpawnAverageMin = 0;
+
+	WaveSpawnSimpleMax = 3;
+	WaveSpawnSimpleMin = 1;
 }
 
 void AArcadeSHMUPGameMode::AddSpawnPoint(ASpawnPoint * SpawnPointToAdd)
@@ -101,6 +151,8 @@ void AArcadeSHMUPGameMode::StartNewGameCycle(FString SaveFileName)
 	// Reseting the score and setting new name
 	CurrentScore = 0;
 	CurrentName = SaveFileName;
+
+	ResetIntensity();
 
 	// Array to help find actors in level 
 	TArray<AActor*> FoundActors;
@@ -139,10 +191,6 @@ void AArcadeSHMUPGameMode::StartNewGameCycle(FString SaveFileName)
 			Enemy->Destroy();
 		}
 	}
-
-	
-
-	
 
 	// Find all lingering projectiles in the area
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemyProjectile::StaticClass(), FoundActors);
@@ -292,7 +340,6 @@ void AArcadeSHMUPGameMode::ReactToEnemyDeath(int PointsAwarded, FVector DeathLoc
 			break;
 		case 1:
 			SimpleEnemyWeaponDropChance += 0.5f; // +0.5% to drop chance when we didn't get a drop from simple enemy
-			UE_LOG(LogTemp, Warning, TEXT("%f weapon drop chance"), SimpleEnemyWeaponDropChance);
 			break;
 		case 2:
 			AverageEnemyWeaponDropChance += 2; //  +2% to drop chance when we didn't get a drop from average enemy
@@ -332,7 +379,7 @@ void AArcadeSHMUPGameMode::WaveSpawn()
 	SpawnWaveType(3);
 
 	// Increasing Intensity Level
-
+	IncreaseIntensity();
 }
 
 void AArcadeSHMUPGameMode::SpawnWaveType(int WaveIndex)

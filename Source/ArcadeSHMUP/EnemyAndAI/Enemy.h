@@ -69,6 +69,10 @@ protected:
 	// Variable to determine if the enemy is invincible or not
 	bool bIsInvincible = false;
 
+	// Function to check if we are invincible or not
+	UFUNCTION()
+	void CheckForInvincibility();
+
 	// Reference to the game mode in case we need something from it or say to it
 	class AArcadeSHMUPGameMode* CurrentGameMode;
 public:	

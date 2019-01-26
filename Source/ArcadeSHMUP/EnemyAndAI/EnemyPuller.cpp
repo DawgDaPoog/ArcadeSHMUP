@@ -49,7 +49,6 @@ void AEnemyPuller::PullTowardsSelf(APawn * Player, float ForceModificator)
 		Cast<AArcadeSHMUPPawn>(Player)->GetShipMeshComponent()->AddForce(Force);
 
 		EmmitParticleEffectsTo(Player);
-	
 	}
 }
 

@@ -31,7 +31,9 @@ public:
 
 	void StartAttackAt(FVector AttackDestination);
 private:
+	UPROPERTY(EditDefaultsOnly, Category = "Movement")
 	float LaunchForce = 1000000.f;
+	UPROPERTY(EditDefaultsOnly, Category = "Movement")
 	float MovementForce = 250000.f;
 
 	FVector Destination = FVector(0.f,0.f,250.f);

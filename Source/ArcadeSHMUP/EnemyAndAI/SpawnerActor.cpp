@@ -60,7 +60,6 @@ void ASpawnerActor::TrySpawnAndDestroy()
 	}
 	// If we didn't find any overlapping with player or enemy, spawn an enemy
 	auto SpawnedEnemy = GetWorld()->SpawnActorDeferred<AEnemy>(EnemyToSpawn, GetActorTransform());
-	//SpawnedEnemy->NotifyGameModeOfEnemySpawned();
 
 	// Setting a health modificator for a given enemy
 	SpawnedEnemy->SetHealthModificator(CurrentGameMode->GetEnemyHealthModificator());

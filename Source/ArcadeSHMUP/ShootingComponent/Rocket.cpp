@@ -26,6 +26,6 @@ void ARocket::Upgrade()
 	SetRateOfFireModificator(1.2f);
 	SetDamageModificator(1.05f);
 	SetProjectileSizeModificator(1.15f);
-	SetKnockBackForceModificator(1.08f);
+	SetKnockBackForceModificator(1.0008f);
 }
 
